@@ -3,16 +3,20 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 //go:embed inputs/day_01.txt
-var depthsFile []byte
+var depthsFile string
 
 func sonarSweep() {
-	d := allFileBytesToInts(depthsFile)
 	answer := 0
+	d := strings.Split(depthsFile, "\n")
 	for i := 0; i < len(d)-1; i++ {
-		if d[i] < d[i+1] {
+		dx, _ := strconv.Atoi(d[i])
+		dy, _ := strconv.Atoi(d[i+1])
+		if dx < dy {
 			answer++
 		}
 	}
@@ -20,11 +24,12 @@ func sonarSweep() {
 }
 
 func sonarSweepSlidingWindow() {
-	d := allFileBytesToInts(depthsFile)
-
 	answer := 0
+	d := strings.Split(depthsFile, "\n")
 	for i := 0; i < len(d)-3; i++ {
-		if d[i] < d[i+3] {
+		dx, _ := strconv.Atoi(d[i])
+		dy, _ := strconv.Atoi(d[i+3])
+		if dx < dy {
 			answer++
 		}
 	}
