@@ -9,19 +9,34 @@ import (
 //go:embed inputs/day_02.txt
 var commandsFile string
 
+type cmd struct {
+	direction string
+	magnitude int
+}
+
+func parseCommands() <-chan *cmd {
+	c := make(chan *cmd)
+	go func() {
+		for _, line := range strings.Split(commandsFile, "\n") {
+			s := strings.Split(line, " ")
+			m, _ := strconv.Atoi(s[1])
+			c <- &cmd{s[0], m}
+		}
+		close(c)
+	}()
+	return c
+}
+
 func dive() int {
 	var x, y int
-	for _, line := range strings.Split(commandsFile, "\n") {
-		cmd := strings.Split(line, " ")
-		units, _ := strconv.Atoi(cmd[1])
-
-		switch cmd[0] {
+	for cmd := range parseCommands() {
+		switch cmd.direction {
 		case "forward":
-			x += units
+			x += cmd.magnitude
 		case "down":
-			y += units
+			y += cmd.magnitude
 		case "up":
-			y -= units
+			y -= cmd.magnitude
 		}
 	}
 	return x * y
@@ -29,18 +44,15 @@ func dive() int {
 
 func diveWithAim() int {
 	var x, y, aim int
-	for _, line := range strings.Split(commandsFile, "\n") {
-		cmd := strings.Split(line, " ")
-		units, _ := strconv.Atoi(cmd[1])
-
-		switch cmd[0] {
+	for cmd := range parseCommands() {
+		switch cmd.direction {
 		case "forward":
-			x += units
-			y += units * aim
+			x += cmd.magnitude
+			y += cmd.magnitude * aim
 		case "down":
-			aim += units
+			aim += cmd.magnitude
 		case "up":
-			aim -= units
+			aim -= cmd.magnitude
 		}
 	}
 	return x * y
