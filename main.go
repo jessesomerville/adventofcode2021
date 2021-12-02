@@ -1,6 +1,8 @@
 package main
 
 func main() {
-	sonarSweep()
-	sonarSweepSlidingWindow()
+	_ = sonarSweep()
+	_ = sonarSweepSlidingWindow()
+	_ = dive()
+	_ = diveWithAim()
 }

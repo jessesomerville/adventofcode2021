@@ -2,7 +2,6 @@ package main
 
 import (
 	_ "embed"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -10,7 +9,7 @@ import (
 //go:embed inputs/day_01.txt
 var depthsFile string
 
-func sonarSweep() {
+func sonarSweep() int {
 	answer := 0
 	d := strings.Split(depthsFile, "\n")
 	for i := 0; i < len(d)-1; i++ {
@@ -20,10 +19,10 @@ func sonarSweep() {
 			answer++
 		}
 	}
-	fmt.Println(answer)
+	return answer
 }
 
-func sonarSweepSlidingWindow() {
+func sonarSweepSlidingWindow() int {
 	answer := 0
 	d := strings.Split(depthsFile, "\n")
 	for i := 0; i < len(d)-3; i++ {
@@ -33,5 +32,5 @@ func sonarSweepSlidingWindow() {
 			answer++
 		}
 	}
-	fmt.Println(answer)
+	return answer
 }
