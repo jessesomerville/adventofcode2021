@@ -5,4 +5,6 @@ func main() {
 	_ = sonarSweepSlidingWindow()
 	_ = dive()
 	_ = diveWithAim()
+	_ = binaryDiagnostic()
+	_ = binaryDiagnosticLifeSupport()
 }
