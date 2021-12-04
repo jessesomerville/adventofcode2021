@@ -1,5 +1,6 @@
 **/*
 !**/*.go
 !**/inputs/*
+!**/test_inputs/*
 !.gitignore
 !**/
