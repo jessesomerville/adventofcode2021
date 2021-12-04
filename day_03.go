@@ -3,30 +3,18 @@ package main
 import (
 	_ "embed"
 	"math/big"
-	"strings"
 )
 
 //go:embed inputs/day_03.txt
 var diagFile string
-
-func parseDiag() <-chan *big.Int {
-	c := make(chan *big.Int)
-	go func() {
-		for _, line := range strings.Split(diagFile, "\n") {
-			n, _ := new(big.Int).SetString(line, 2)
-			c <- n
-		}
-		close(c)
-	}()
-	return c
-}
 
 func binaryDiagnostic() int64 {
 	gamma := new(big.Int)
 	epsilon := new(big.Int).SetInt64((1 << 12) - 1)
 	one := make([]int, 12)
 
-	for n := range parseDiag() {
+	for line := range parseFile(diagFile) {
+		n, _ := new(big.Int).SetString(line, 2)
 		for i := n.BitLen() - 1; i >= 0; i-- {
 			if gamma.Bit(i) == 1 {
 				continue
@@ -44,37 +32,26 @@ func binaryDiagnostic() int64 {
 }
 
 func binaryDiagnosticLifeSupport() int64 {
-	oxy := new(big.Int) // .SetInt64(getOxy())
-	co2 := new(big.Int) // .SetInt64(getCo2())
-	tree := makeTree()
+	oxy := new(big.Int)
+	co2 := new(big.Int)
+	tree, bitLen := makeTrie()
 	t1, t2 := tree, tree
 
-	for i := 11; i >= 0; i-- {
-		switch {
-		case t1.one.weight < t1.zero.weight:
-			oxy.SetBit(oxy, i, 0)
+	for i := bitLen - 1; i >= 0; i-- {
+		if t1.zero.weight > t1.one.weight {
 			t1 = t1.zero
-		case t1.one.weight >= t1.zero.weight:
+		} else {
 			oxy.SetBit(oxy, i, 1)
 			t1 = t1.one
 		}
 
-		switch {
-		case t2.zero.weight == 0:
-			co2.SetBit(co2, i, 1)
-			t2 = t2.one
-		case t2.one.weight == 0:
-			co2.SetBit(co2, i, 0)
+		if t2.zero.weight <= t2.one.weight && t2.zero.weight != 0 {
 			t2 = t2.zero
-		case t2.zero.weight <= t2.one.weight:
-			co2.SetBit(co2, i, 0)
-			t2 = t2.zero
-		case t2.zero.weight > t2.one.weight:
+		} else {
 			co2.SetBit(co2, i, 1)
 			t2 = t2.one
 		}
 	}
-
 	return oxy.Mul(oxy, co2).Int64()
 }
 
@@ -90,10 +67,11 @@ func newNode() *node {
 	}
 }
 
-func makeTree() *node {
+func makeTrie() (*node, int) {
 	root := newNode()
-
-	for _, n := range strings.Split(diagFile, "\n") {
+	bitLen := 0
+	for n := range parseFile(diagFile) {
+		bitLen = len(n)
 		currParent := root
 		for _, c := range n {
 			switch c {
@@ -112,5 +90,5 @@ func makeTree() *node {
 			}
 		}
 	}
-	return root
+	return root, bitLen
 }
