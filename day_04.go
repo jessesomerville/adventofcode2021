@@ -72,18 +72,7 @@ func parseBoards(f string) ([]string, []*board, int) {
 	boards := make([]*board, len(lines)-1)
 	for bi, s := range lines[1:] {
 		fields := fieldsPool.Get().([]string)
-		// The following ~40 lines is strings.Fields(), but I modified it to use a sync.Pool to save on memory.
-		n := 0
-		wasSpace := 1
-		setBits := uint8(0)
-		for i := 0; i < len(s); i++ {
-			r := s[i]
-			setBits |= r
-			isSpace := int(asciiSpace[r])
-			n += wasSpace & ^isSpace
-			wasSpace = isSpace
-		}
-
+		// The following ~20 lines is strings.Fields(), but I modified it to use a sync.Pool to save on memory.
 		na := 0
 		fieldStart := 0
 		i := 0
@@ -139,21 +128,26 @@ func giantSquid() int {
 }
 
 func giantSquidLastWinner() int {
-	draws, boards, players := parseBoards(bingoFile)
-	for _, draw := range draws {
-		for _, b := range boards {
-			if b.out {
-				continue
-			}
+	draws, boards, _ := parseBoards(bingoFile)
+	var maxWinner *board
+	maxMoves := 0
+	maxDraw := ""
+
+	// Since we are eventually completing every board anyway, it's faster to just solve each board
+	// and compare the number of moves it took.
+	for _, b := range boards {
+		for i, draw := range draws {
 			if c, ok := b.values[draw]; ok {
 				if b.won(c) {
-					if players == 1 {
-						return b.score(draw)
+					if i > maxMoves {
+						maxMoves = i
+						maxDraw = draw
+						maxWinner = b
 					}
-					players--
+					break
 				}
 			}
 		}
 	}
-	return 0
+	return maxWinner.score(maxDraw)
 }
