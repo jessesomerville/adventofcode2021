@@ -2,5 +2,6 @@
 !**/*.go
 !**/inputs/*
 !**/test_inputs/*
+!README.md
 !.gitignore
 !**/
