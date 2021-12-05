@@ -28,6 +28,6 @@ BenchmarkBinaryDiagnosticLifeSupport-8              1941            613070 ns/op
 ### Day 04
 
 ```
-BenchmarkGiantSquid-8                               2847            418625 ns/op          281695 B/op       3567 allocs/op
-BenchmarkGiantSquidLastWinner-8                     2545            467532 ns/op          281724 B/op       3567 allocs/op
+BenchmarkGiantSquid-8                               4341            271041 ns/op          184972 B/op       2962 allocs/op
+BenchmarkGiantSquidLastWinner-8                     2907            409364 ns/op          184962 B/op       2962 allocs/op
 ```

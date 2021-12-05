@@ -2,24 +2,13 @@ package main
 
 import (
 	_ "embed"
-	"math"
 	"strconv"
 	"strings"
+	"sync"
 )
 
-var (
-	//go:embed inputs/day_04.txt
-	bingoFile string
-
-	// 2d coords -> 1d coords = (width * row) + col
-	// This is just for up diagonal because down diagonals have the same row and col.
-	downDiagCoords = map[int]bool{
-		4:  true,
-		8:  true,
-		16: true,
-		20: true,
-	}
-)
+//go:embed inputs/day_04.txt
+var bingoFile string
 
 type cell struct {
 	row    int
@@ -34,18 +23,22 @@ type board struct {
 	out              bool
 }
 
-func (b *board) won(draw string) bool {
-	cell := b.values[draw]
-	cell.marked = true
-	b.rows[cell.row]--
-	b.cols[cell.col]--
-	if cell.row == cell.col {
+func (b *board) won(c *cell) bool {
+	c.marked = true
+	b.rows[c.row]--
+	b.cols[c.col]--
+	coords := 5*c.row + c.col // 2d coords -> 1d coords = (width * row) + col
+	switch coords {
+	case 2:
 		b.downDiag--
-	}
-	if downDiagCoords[5*cell.row+cell.col] {
+		b.upDiag--
+	case 0, 6, 12, 24:
+		b.downDiag--
+	case 4, 8, 16, 20:
 		b.upDiag--
 	}
-	if b.rows[cell.row] == 0 || b.cols[cell.col] == 0 || b.downDiag == 0 || b.upDiag == 0 {
+
+	if b.rows[c.row] == 0 || b.cols[c.col] == 0 || b.downDiag == 0 || b.upDiag == 0 {
 		b.out = true
 		return true
 	}
@@ -64,42 +57,79 @@ func (b *board) score(draw string) int {
 	return drawInt * sum
 }
 
-// This uses a ridiculous amount of memory, but it's fast :shrug:
-func parseBoards(f string) ([]string, map[string][]*board, int) {
-	sections := strings.SplitN(f, "\n", 2)
-	draws := strings.Split(sections[0], ",")
+var fieldsPool = sync.Pool{
+	New: func() interface{} {
+		return make([]string, 25)
+	},
+}
 
-	boardsStr := strings.Split(sections[1], "\n\n")
-	boards := make(map[string][]*board, len(boardsStr)) // map from values to the boards that have it.
+var asciiSpace = [256]uint8{'\t': 1, '\n': 1, '\v': 1, '\f': 1, '\r': 1, ' ': 1}
 
-	for _, b := range boardsStr {
-		fields := strings.Fields(b)
-		width := int(math.Sqrt(float64(len(fields))))
+func parseBoards(f string) ([]string, []*board, int) {
+	lines := strings.Split(f, "\n\n")
+	draws := strings.Split(lines[0], ",")
+
+	boards := make([]*board, len(lines)-1)
+	for bi, s := range lines[1:] {
+		fields := fieldsPool.Get().([]string)
+		// The following ~40 lines is strings.Fields(), but I modified it to use a sync.Pool to save on memory.
+		n := 0
+		wasSpace := 1
+		setBits := uint8(0)
+		for i := 0; i < len(s); i++ {
+			r := s[i]
+			setBits |= r
+			isSpace := int(asciiSpace[r])
+			n += wasSpace & ^isSpace
+			wasSpace = isSpace
+		}
+
+		na := 0
+		fieldStart := 0
+		i := 0
+		for i < len(s) && asciiSpace[s[i]] != 0 {
+			i++
+		}
+		fieldStart = i
+		for i < len(s) {
+			if asciiSpace[s[i]] == 0 {
+				i++
+				continue
+			}
+			fields[na] = s[fieldStart:i]
+			na++
+			i++
+			for i < len(s) && asciiSpace[s[i]] != 0 {
+				i++
+			}
+			fieldStart = i
+		}
+		if fieldStart < len(s) {
+			fields[na] = s[fieldStart:]
+		}
+
 		thisBoard := &board{
-			values:   make(map[string]*cell, len(fields)),
+			values:   make(map[string]*cell, 25),
 			rows:     [5]int{5, 5, 5, 5, 5},
 			cols:     [5]int{5, 5, 5, 5, 5},
 			upDiag:   5,
 			downDiag: 5,
 		}
-		for i, f := range fields {
-			thisBoard.values[f] = &cell{row: i / width, col: i % width}
-			if v, ok := boards[f]; ok {
-				boards[f] = append(v, thisBoard)
-			} else {
-				boards[f] = []*board{thisBoard}
-			}
+		for fi, f := range fields {
+			thisBoard.values[f] = &cell{row: fi / 5, col: fi % 5}
 		}
+		fieldsPool.Put(fields)
+		boards[bi] = thisBoard
 	}
-	return draws, boards, len(boardsStr)
+	return draws, boards, len(lines[1:])
 }
 
 func giantSquid() int {
 	draws, boards, _ := parseBoards(bingoFile)
 	for _, draw := range draws {
-		if matchingBoards, ok := boards[draw]; ok {
-			for _, b := range matchingBoards {
-				if b.won(draw) {
+		for _, b := range boards {
+			if c, ok := b.values[draw]; ok {
+				if b.won(c) {
 					return b.score(draw)
 				}
 			}
@@ -111,12 +141,12 @@ func giantSquid() int {
 func giantSquidLastWinner() int {
 	draws, boards, players := parseBoards(bingoFile)
 	for _, draw := range draws {
-		if matchingBoards, ok := boards[draw]; ok {
-			for _, b := range matchingBoards {
-				if b.out {
-					continue
-				}
-				if b.won(draw) {
+		for _, b := range boards {
+			if b.out {
+				continue
+			}
+			if c, ok := b.values[draw]; ok {
+				if b.won(c) {
 					if players == 1 {
 						return b.score(draw)
 					}
