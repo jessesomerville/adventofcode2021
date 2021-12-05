@@ -68,8 +68,6 @@ func (b *board) score(draw string) int {
 }
 
 // This uses a ridiculous amount of memory, but it's fast :shrug:
-//
-// BenchmarkParseBoards-8            3025            394227 ns/op          281698 B/op       3567 allocs/op
 func parseBoards(f string) ([]string, map[string][]*board, int) {
 	sections := strings.SplitN(f, "\n", 2)
 	draws := strings.Split(sections[0], ",")
