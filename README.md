@@ -21,8 +21,8 @@ BenchmarkDiveWithAim-8                              3951            307060 ns/op
 ### Day 03
 
 ```
-BenchmarkBinaryDiagnostic-8                         2340            508271 ns/op           56576 B/op       2006 allocs/op
-BenchmarkBinaryDiagnosticLifeSupport-8              1941            613070 ns/op          271888 B/op      10644 allocs/op
+BenchmarkBinaryDiagnostic-8                         5340            227984 ns/op           16513 B/op          3 allocs/op
+BenchmarkBinaryDiagnosticLifeSupport-8              3246            371632 ns/op          101617 B/op       3549 allocs/op
 ```
 
 ### Day 04

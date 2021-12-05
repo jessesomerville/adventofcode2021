@@ -6,7 +6,7 @@ func main() {
 	// _ = dive()
 	// _ = diveWithAim()
 	// _ = binaryDiagnostic()
-	// _ = binaryDiagnosticLifeSupport()
+	//  _ = binaryDiagnosticLifeSupport()
 	// _ = giantSquid()
 	// _ = giantSquidLastWinner()
 }

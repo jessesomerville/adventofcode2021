@@ -2,57 +2,64 @@ package main
 
 import (
 	_ "embed"
-	"math/big"
 )
 
 //go:embed inputs/day_03.txt
 var diagFile string
 
-func binaryDiagnostic() int64 {
-	gamma := new(big.Int)
-	epsilon := new(big.Int).SetInt64((1 << 12) - 1)
+func binaryDiagnostic() int {
+	gamma := 0
 	one := make([]int, 12)
 
 	for line := range parseFile(diagFile) {
-		n, _ := new(big.Int).SetString(line, 2)
-		for i := n.BitLen() - 1; i >= 0; i-- {
-			if gamma.Bit(i) == 1 {
+		for i, bit := range line {
+			if one[i] >= 500 {
 				continue
 			}
-			if n.Bit(i) == 1 {
+			if bit == '1' {
 				one[i]++
 			}
 			if one[i] >= 500 {
-				gamma.SetBit(gamma, i, 1)
-				epsilon.SetBit(epsilon, i, 0)
+				gamma += 1 << (11 - i)
 			}
 		}
 	}
-	return gamma.Mul(gamma, epsilon).Int64()
+	return gamma * (((1 << 12) - 1) - gamma)
 }
 
-func binaryDiagnosticLifeSupport() int64 {
-	oxy := new(big.Int)
-	co2 := new(big.Int)
-	tree, bitLen := makeTrie()
+func binaryDiagnosticLifeSupport() int {
+	var oxygen, co2 int
+
+	tree := makeTrie()
 	t1, t2 := tree, tree
 
-	for i := bitLen - 1; i >= 0; i-- {
-		if t1.zero.weight > t1.one.weight {
+	for i := 0; i < 12; i++ {
+		if t1.zero == nil {
+			oxygen += 1 << (11 - i)
+			t1 = t1.one
+		} else if t1.one == nil {
+			t1 = t1.zero
+		} else if t1.one == nil || t1.zero.weight > t1.one.weight {
 			t1 = t1.zero
 		} else {
-			oxy.SetBit(oxy, i, 1)
+			oxygen += 1 << (11 - i)
 			t1 = t1.one
 		}
 
-		if t2.zero.weight <= t2.one.weight && t2.zero.weight != 0 {
+		if t2.zero == nil {
+			co2 += 1 << (11 - i)
+			t2 = t2.one
+		} else if t2.one == nil {
+			t2 = t2.zero
+		} else if t2.zero.weight <= t2.one.weight && t2.zero.weight != 0 {
 			t2 = t2.zero
 		} else {
-			co2.SetBit(co2, i, 1)
+			co2 += 1 << (11 - i)
 			t2 = t2.one
 		}
 	}
-	return oxy.Mul(oxy, co2).Int64()
+
+	return oxygen * co2
 }
 
 type node struct {
@@ -60,35 +67,26 @@ type node struct {
 	weight    int
 }
 
-func newNode() *node {
-	return &node{
-		zero: &node{weight: 0},
-		one:  &node{weight: 0},
-	}
-}
-
-func makeTrie() (*node, int) {
-	root := newNode()
-	bitLen := 0
+func makeTrie() *node {
+	root := new(node)
 	for n := range parseFile(diagFile) {
-		bitLen = len(n)
 		currParent := root
 		for _, c := range n {
 			switch c {
 			case '0':
-				if currParent.zero.weight == 0 {
-					currParent.zero = newNode()
+				if currParent.zero == nil {
+					currParent.zero = new(node)
 				}
 				currParent.zero.weight++
 				currParent = currParent.zero
 			case '1':
-				if currParent.one.weight == 0 {
-					currParent.one = newNode()
+				if currParent.one == nil {
+					currParent.one = new(node)
 				}
 				currParent.one.weight++
 				currParent = currParent.one
 			}
 		}
 	}
-	return root, bitLen
+	return root
 }

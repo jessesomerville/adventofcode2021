@@ -31,14 +31,14 @@ func TestDiveWithAim(t *testing.T) {
 }
 
 func TestBinaryDiagnostic(t *testing.T) {
-	want := int64(4191876)
+	want := 4191876
 	if got := binaryDiagnostic(); got != want {
 		t.Errorf("binaryDiagnostic() = %d, want = %d", got, want)
 	}
 }
 
 func TestBinaryDiagnosticLifeSupport(t *testing.T) {
-	want := int64(3414905)
+	want := 3414905
 	if got := binaryDiagnosticLifeSupport(); got != want {
 		t.Errorf("binaryDiagnosticLifeSupport() = %d, want = %d", got, want)
 	}
