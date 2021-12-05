@@ -11,9 +11,6 @@ var (
 	//go:embed inputs/day_04.txt
 	bingoFile string
 
-	//go:embed test_inputs/day_04.txt
-	testBingoFile string
-
 	// 2d coords -> 1d coords = (width * row) + col
 	// This is just for up diagonal because down diagonals have the same row and col.
 	downDiagCoords = map[int]bool{
