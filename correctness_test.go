@@ -57,3 +57,10 @@ func TestGiantSquidLastWinner(t *testing.T) {
 		t.Errorf("giantSquidLastWinner() = %d, want = %d", got, want)
 	}
 }
+
+func TestLanternFish(t *testing.T) {
+	want := 1675781200288
+	if got := lanternFish(); got != want {
+		t.Errorf("lanternFish() = %d, want = %d", got, want)
+	}
+}

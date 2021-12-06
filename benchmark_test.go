@@ -51,3 +51,9 @@ func BenchmarkGiantSquidLastWinner(b *testing.B) {
 		giantSquidLastWinner()
 	}
 }
+
+func BenchmarkLanternFish(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		lanternFish()
+	}
+}
