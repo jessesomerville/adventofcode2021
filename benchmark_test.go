@@ -57,3 +57,15 @@ func BenchmarkLanternFish(b *testing.B) {
 		lanternFish()
 	}
 }
+
+func BenchmarkWhaleVsCrabs(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		whaleVsCrabs()
+	}
+}
+
+func BenchmarkWhaleVsCrabsGas(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		whaleVsCrabsGas()
+	}
+}

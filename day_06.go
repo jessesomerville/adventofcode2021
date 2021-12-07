@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	//go:embed inputs/day_05.txt
+	//go:embed inputs/day_06.txt
 	lanternFishFile string
 )
 

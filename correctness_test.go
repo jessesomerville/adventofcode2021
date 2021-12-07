@@ -64,3 +64,17 @@ func TestLanternFish(t *testing.T) {
 		t.Errorf("lanternFish() = %d, want = %d", got, want)
 	}
 }
+
+func TestWnaleVsCrabs(t *testing.T) {
+	want := 347011
+	if got := whaleVsCrabs(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}
+
+func TestWnaleVsCrabsGas(t *testing.T) {
+	want := 98363777
+	if got := whaleVsCrabsGas(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}

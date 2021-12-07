@@ -10,4 +10,6 @@ func main() {
 	// giantSquid()
 	// giantSquidLastWinner()
 	// lanternFish()
+	// whaleVsCrabs()
+	// whaleVsCrabsGas()
 }
