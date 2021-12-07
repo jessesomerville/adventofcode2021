@@ -9,6 +9,8 @@ func main() {
 	// binaryDiagnosticLifeSupport()
 	// giantSquid()
 	// giantSquidLastWinner()
+	// hydrothermalVenture()
+	// hydrothermalVentureDiagonals()
 	// lanternFish()
 	// whaleVsCrabs()
 	// whaleVsCrabsGas()

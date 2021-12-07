@@ -31,3 +31,10 @@ BenchmarkBinaryDiagnosticLifeSupport-8              3246            371632 ns/op
 BenchmarkGiantSquid-8                               4400            270575 ns/op          184953 B/op       2962 allocs/op
 BenchmarkGiantSquidLastWinner-8                     3132            378273 ns/op          184948 B/op       2962 allocs/op
 ```
+
+## Day 05
+
+```
+BenchmarkHydrothermalVenture-8                       499           2318351 ns/op         8067912 B/op       1504 allocs/op
+BenchmarkHydrothermalVentureDiagonals-8              411           2863063 ns/op         8067917 B/op       1504 allocs/op
+```

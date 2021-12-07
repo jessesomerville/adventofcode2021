@@ -52,6 +52,19 @@ func BenchmarkGiantSquidLastWinner(b *testing.B) {
 	}
 }
 
+
+func BenchmarkHydrothermalVenture(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		hydrothermalVenture()
+	}
+}
+
+func BenchmarkHydrothermalVentureDiagonals(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		hydrothermalVentureDiagonals()
+  }
+}
+
 func BenchmarkLanternFish(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		lanternFish()

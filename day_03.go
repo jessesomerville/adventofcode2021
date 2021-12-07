@@ -33,28 +33,28 @@ func binaryDiagnosticLifeSupport() int {
 	tree := makeTrie()
 	t1, t2 := tree, tree
 
-	for i := 0; i < 12; i++ {
+	for i := 11; i >= 0; i-- {
 		if t1.zero == nil {
-			oxygen += 1 << (11 - i)
+			oxygen += 1 << i
 			t1 = t1.one
 		} else if t1.one == nil {
 			t1 = t1.zero
-		} else if t1.one == nil || t1.zero.weight > t1.one.weight {
+		} else if t1.zero.weight > t1.one.weight {
 			t1 = t1.zero
 		} else {
-			oxygen += 1 << (11 - i)
+			oxygen += 1 << i
 			t1 = t1.one
 		}
 
 		if t2.zero == nil {
-			co2 += 1 << (11 - i)
+			co2 += 1 << i
 			t2 = t2.one
 		} else if t2.one == nil {
 			t2 = t2.zero
 		} else if t2.zero.weight <= t2.one.weight && t2.zero.weight != 0 {
 			t2 = t2.zero
 		} else {
-			co2 += 1 << (11 - i)
+			co2 += 1 << i
 			t2 = t2.one
 		}
 	}
