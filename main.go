@@ -11,4 +11,7 @@ func main() {
 	// giantSquidLastWinner()
 	// hydrothermalVenture()
 	// hydrothermalVentureDiagonals()
+	// lanternFish()
+	// whaleVsCrabs()
+	// whaleVsCrabsGas()
 }

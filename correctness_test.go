@@ -69,5 +69,26 @@ func TestHydrothermalVentureDiagonals(t *testing.T) {
 	want := 22364
 	if got := hydrothermalVentureDiagonals(); got != want {
 		t.Errorf("hydrothermalVentureDiagonals() = %d, want = %d", got, want)
+  }
+}
+
+func TestLanternFish(t *testing.T) {
+	want := 1675781200288
+	if got := lanternFish(); got != want {
+		t.Errorf("lanternFish() = %d, want = %d", got, want)
+	}
+}
+
+func TestWnaleVsCrabs(t *testing.T) {
+	want := 347011
+	if got := whaleVsCrabs(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}
+
+func TestWnaleVsCrabsGas(t *testing.T) {
+	want := 98363777
+	if got := whaleVsCrabsGas(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
 	}
 }

@@ -52,6 +52,7 @@ func BenchmarkGiantSquidLastWinner(b *testing.B) {
 	}
 }
 
+
 func BenchmarkHydrothermalVenture(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hydrothermalVenture()
@@ -61,5 +62,23 @@ func BenchmarkHydrothermalVenture(b *testing.B) {
 func BenchmarkHydrothermalVentureDiagonals(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hydrothermalVentureDiagonals()
+  }
+}
+
+func BenchmarkLanternFish(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		lanternFish()
+	}
+}
+
+func BenchmarkWhaleVsCrabs(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		whaleVsCrabs()
+	}
+}
+
+func BenchmarkWhaleVsCrabsGas(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		whaleVsCrabsGas()
 	}
 }
