@@ -57,3 +57,17 @@ func TestGiantSquidLastWinner(t *testing.T) {
 		t.Errorf("giantSquidLastWinner() = %d, want = %d", got, want)
 	}
 }
+
+func TestHydrothermalVenture(t *testing.T) {
+	want := 7468
+	if got := hydrothermalVenture(); got != want {
+		t.Errorf("hydrothermalVenture() = %d, want = %d", got, want)
+	}
+}
+
+func TestHydrothermalVentureDiagonals(t *testing.T) {
+	want := 22364
+	if got := hydrothermalVentureDiagonals(); got != want {
+		t.Errorf("hydrothermalVentureDiagonals() = %d, want = %d", got, want)
+	}
+}
