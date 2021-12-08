@@ -43,6 +43,10 @@ func whaleVsCrabs() int {
 	return moves2
 }
 
+// I have no idea why its one more or less than the average sometimes.  This is the distribution:
+//    Less than avg:  0.00505
+//    Average:        0.99055
+//    More than avg:  0.00440
 func whaleVsCrabsGas() int {
 	posStr := strings.Split(crabsFile, ",")
 	positions := make([]int, len(posStr))
