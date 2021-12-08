@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"strings"
 
@@ -41,30 +42,53 @@ func sevenSegment() {
 	fmt.Println(counts)
 }
 
-// d3 d2 d1 d0
-// 0  0  0  0
-// 0  0  0  1
-// 0  0  1  0
+func sevenSegmentDecode() {
+	// 	1: 2,
+	// 	7: 3,
+	// 	4: 4,
+	// 	5: 5,
+	// 	2: 5,
+	// 	3: 5,
+	// 	0: 6,
+	// 	6: 6,
+	// 	9: 6,
+	// 	8: 7,
 
-// a, b    : (d1 && d0)
-// a, d, e : (!d2 && !d0)
-// b, f    : (!d1 && !d0)
-// d, e, g : (d1 && !d0)
-// d, g    : (!d2 && d1)
+	inputs := parseInputSegments(testSegments)
+	x := inputs[1].signals
 
-// if a then d3 or d2 & d0 or d1 & d0 or !d2 & !d0
+	sort.Slice(x, func(i, j int) bool {
+		return len(x[i]) < len(x[j])
+	})
 
-// func kTable() {
-// 	var d3, d2, d1, d0 bool
-// 	a := d3 || (d2 && d0) || (d1 && d0) || (!d2 && !d0)
-// 	b := d3 || (d1 && d0) || (!d1 && !d0) || !d2
-// 	c := d3 || d2 || !d1 || d0
-// 	d := (d2 && !d1 && d0) || (!d2 && d1) || (d1 && !d0) || (!d2 && !d0)
-// 	e := (d1 && !d0) || (!d2 && !d0)
-// 	f := d3 || (!d1 && !d0) || (d2 && !d1) || (d2 && !d0)
-// 	g := d3 || (d2 && !d1) || (d1 && !d0) || (!d2 && d1)
+	sum := 0
+	// reverse i
+	for i, o := range inputs[1].output {
+		if len(o) == 2 {
+			sum += int(math.Pow10(i))
+		} else if len(o) == 3 {
+			sum += int(7 * math.Pow10(i))
+		} else if len(o) == 4 {
+			sum += int(4 * math.Pow10(i))
+		} else if len(o) == 7 {
+			sum += int(8 * math.Pow10(i))
+		}
+	}
+	fmt.Println(sum)
 
-// }
+	// one := x[0]
+	// seven := x[1]
+	// four := x[2]
+	// eight := x[9]
+	// fiveLength := x[3:6]
+	// sixLength := x[6:9]
+
+}
+
+func removeItem(s []string, i int) []string {
+	s[i] = s[len(s)-1]
+	return s[:len(s)-1]
+}
 
 //  aaaa
 // f    b
@@ -81,73 +105,62 @@ func sevenSegment() {
 // 5    6
 // 5    6
 //  7777
-func sevenSegmentDecode() {
-	// segCount := map[int]int{
-	// 	0: 6,
-	// 	1: 2,
-	// 	2: 5,
-	// 	3: 5,
-	// 	4: 4,
-	// 	5: 5,
-	// 	6: 6,
-	// 	7: 3,
-	// 	8: 7,
-	// 	9: 6,
-	// }
-	// 	1: 2,
-	// 	7: 3,
-	// 	4: 4,
-	// 	5: 5,
-	// 	2: 5,
-	// 	3: 5,
-	// 	0: 6,
-	// 	6: 6,
-	// 	9: 6,
-	// 	8: 7,
+// func sevenSegmentDecode() {
+// 	// 	1: 2,
+// 	// 	7: 3,
+// 	// 	4: 4,
+// 	// 	5: 5,
+// 	// 	2: 5,
+// 	// 	3: 5,
+// 	// 	0: 6,
+// 	// 	6: 6,
+// 	// 	9: 6,
+// 	// 	8: 7,
 
-	inputs := parseInputSegments(testSegments)
-	x := inputs[0].signals
-	// segMaps := make([]map[rune]bool, 8)
-	// for i, s := range x {
-	// 	m := make(map[rune]bool, len(s))
-	// 	for _, r := range s {
-	// 		m[r] = true
-	// 	}
-	// 	segMaps[i] = m
-	// }
-	sort.Slice(x, func(i, j int) bool {
-		return len(x[i]) < len(x[j])
-	})
-	// one := x[0]
-	// seven := x[1]
-	// four := x[2]
-	fiveLength := x[3:6]
-	sixLength := x[6:9]
+// 	inputs := parseInputSegments(testSegments)
+// 	x := inputs[0].signals
 
-	fmt.Println(fiveLength)
-	fmt.Println(sixLength)
-	// // eight := x[8]
-
-	// a := getDiff(one, seven)[0]
-
-	// 6 is six length that doesn't contain all of 1
-	// 9 shares g with 6, 0 doesn't
-
-}
-
-// b should contain more segments
-// func getDiff(a, b string) []rune {
-// 	am := make(map[rune]bool)
-// 	for _, i := range a {
-// 		am[i] = true
+// 	toFind := map[string]bool{}
+// 	for _, i := range inputs[0].output {
+// 		toFind[i] = true
 // 	}
-// 	diff := []rune{}
-// 	for _, i := range b {
-// 		if !am[i] {
-// 			diff = append(diff, i)
+
+// 	sort.Slice(x, func(i, j int) bool {
+// 		return len(x[i]) < len(x[j])
+// 	})
+// 	one := x[0]
+// 	// seven := x[1]
+// 	// four := x[2]
+// 	fiveLength := x[3:6]
+// 	sixLength := x[6:9]
+
+// 	three := ""
+// 	idx := 0
+// 	for _, x := range fiveLength {
+// 		if strings.ContainsRune(x, rune(one[0])) && strings.ContainsRune(x, rune(one[1])) {
+// 			three = x
+// 			break
 // 		}
+// 		idx++
 // 	}
-// 	return diff
+// 	fiveLength = append(fiveLength[:idx], fiveLength[idx+1:]...)
+// 	six := ""
+// 	idx = 0
+// 	for _, x := range sixLength {
+// 		if strings.ContainsRune(x, rune(one[0])) != strings.ContainsRune(x, rune(one[1])) {
+// 			six = x
+// 			break
+// 		}
+// 		idx++
+// 	}
+// 	sixLength = append(sixLength[:idx], sixLength[idx+1:]...)
+// 	// // eight := x[8]
+
+// }
+
+// func removeItem(s []string, i int) []string {
+// 	s[i] = s[len(s)-1]
+// 	return s[:len(s)-1]
 // }
 
 type segment struct {
