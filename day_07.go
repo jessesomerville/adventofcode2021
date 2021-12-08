@@ -53,34 +53,23 @@ func whaleVsCrabsGas() int {
 	}
 
 	avg := int(math.Round(float64(sum) / float64(len(positions))))
-	var minGas int
 
+	var minGas1, minGas2, minGas3 int
 	for _, p := range positions {
-		dist := math.Abs(float64(p - avg))
-		minGas += int((dist * (dist + 1)) / 2)
+		dist1 := math.Abs(float64(p - avg))
+		minGas1 += int((dist1 * (dist1 + 1)) / 2)
+		dist2 := math.Abs(float64(p - avg + 1))
+		minGas2 += int((dist2 * (dist2 + 1)) / 2)
+		dist3 := math.Abs(float64(p - avg - 1))
+		minGas3 += int((dist3 * (dist3 + 1)) / 2)
 	}
-	prevMin := 0
-	i := 1
-	for prevMin != minGas {
-		target1 := avg + i
-		target2 := avg - i
-		var gas1, gas2 int
-		for _, p := range positions {
-			dist1 := math.Abs(float64(p - target1))
-			dist2 := math.Abs(float64(p - target2))
-			gas1 += int((dist1 * (dist1 + 1)) / 2)
-			gas2 += int((dist2 * (dist2 + 1)) / 2)
-		}
 
-		prevMin = minGas
-		if gas1 < minGas {
-			minGas = gas1
-		}
-		if gas2 < minGas {
-			minGas = gas2
-		}
-		i++
+	min := minGas1
+	if minGas2 < minGas1 {
+		min = minGas2
 	}
-	return minGas
-
+	if minGas3 < min {
+		return minGas3
+	}
+	return min
 }

@@ -38,3 +38,16 @@ BenchmarkGiantSquidLastWinner-8                     3132            378273 ns/op
 BenchmarkHydrothermalVenture-8                       499           2318351 ns/op         8067912 B/op       1504 allocs/op
 BenchmarkHydrothermalVentureDiagonals-8              411           2863063 ns/op         8067917 B/op       1504 allocs/op
 ```
+
+# Day 06
+
+```
+BenchmarkLanternFish-8                            104688             11389 ns/op           25344 B/op        257 allocs/op
+```
+
+# Day 07
+
+```
+BenchmarkWhaleVsCrabs-8                            15492             78772 ns/op           24600 B/op          3 allocs/op
+BenchmarkWhaleVsCrabsGas-8                         56683             20940 ns/op           24576 B/op          2 allocs/op
+```
