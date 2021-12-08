@@ -32,11 +32,11 @@ BenchmarkGiantSquid-8                               4400            270575 ns/op
 BenchmarkGiantSquidLastWinner-8                     3132            378273 ns/op          184948 B/op       2962 allocs/op
 ```
 
-## Day 05
+## Day 05 (after manually moving inputs)
 
 ```
-BenchmarkHydrothermalVenture-8                       499           2318351 ns/op         8067912 B/op       1504 allocs/op
-BenchmarkHydrothermalVentureDiagonals-8              411           2863063 ns/op         8067917 B/op       1504 allocs/op
+BenchmarkHydrothermalVenture-8                       825           1250346 ns/op         8003626 B/op          1 allocs/op
+BenchmarkHydrothermalVentureDiagonals-8              615           1801328 ns/op         8003605 B/op          1 allocs/op
 ```
 
 # Day 06
