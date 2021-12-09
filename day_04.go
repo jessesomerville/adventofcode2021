@@ -107,7 +107,7 @@ func parseBoards(f string) ([]string, []*board, int) {
 		for fi, f := range fields {
 			thisBoard.values[f] = &cell{row: fi / 5, col: fi % 5}
 		}
-		fieldsPool.Put(fields)
+		fieldsPool.Put(&fields)
 		boards[bi] = thisBoard
 	}
 	return draws, boards, len(lines[1:])

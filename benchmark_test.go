@@ -52,7 +52,6 @@ func BenchmarkGiantSquidLastWinner(b *testing.B) {
 	}
 }
 
-
 func BenchmarkHydrothermalVenture(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hydrothermalVenture()
@@ -62,7 +61,7 @@ func BenchmarkHydrothermalVenture(b *testing.B) {
 func BenchmarkHydrothermalVentureDiagonals(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hydrothermalVentureDiagonals()
-  }
+	}
 }
 
 func BenchmarkLanternFish(b *testing.B) {
@@ -80,5 +79,29 @@ func BenchmarkWhaleVsCrabs(b *testing.B) {
 func BenchmarkWhaleVsCrabsGas(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		whaleVsCrabsGas()
+	}
+}
+
+func BenchmarkSevenSegment(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		sevenSegment()
+	}
+}
+
+func BenchmarkSevenSegmentDecode(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		sevenSegmentDecode()
+	}
+}
+
+func BenchmarkSmokeBasin(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		smokeBasin()
+	}
+}
+
+func BenchmarkSmokeBasinLargest(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		smokeBasinLargest()
 	}
 }

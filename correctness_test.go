@@ -69,7 +69,7 @@ func TestHydrothermalVentureDiagonals(t *testing.T) {
 	want := 22364
 	if got := hydrothermalVentureDiagonals(); got != want {
 		t.Errorf("hydrothermalVentureDiagonals() = %d, want = %d", got, want)
-  }
+	}
 }
 
 func TestLanternFish(t *testing.T) {
@@ -89,6 +89,34 @@ func TestWnaleVsCrabs(t *testing.T) {
 func TestWnaleVsCrabsGas(t *testing.T) {
 	want := 98363777
 	if got := whaleVsCrabsGas(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}
+
+func TestSevenSegment(t *testing.T) {
+	want := 272
+	if got := sevenSegment(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}
+
+func TestSevenSegmentDecode(t *testing.T) {
+	want := 1007675
+	if got := sevenSegmentDecode(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}
+
+func TestSmokeBasin(t *testing.T) {
+	want := 570
+	if got := smokeBasin(); got != want {
+		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+	}
+}
+
+func TestSmokeBasinLargest(t *testing.T) {
+	want := 899392
+	if got := smokeBasinLargest(); got != want {
 		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
 	}
 }
