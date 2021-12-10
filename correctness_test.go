@@ -96,27 +96,41 @@ func TestWnaleVsCrabsGas(t *testing.T) {
 func TestSevenSegment(t *testing.T) {
 	want := 272
 	if got := sevenSegment(); got != want {
-		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+		t.Errorf("sevenSegment() = %d, want = %d", got, want)
 	}
 }
 
 func TestSevenSegmentDecode(t *testing.T) {
 	want := 1007675
 	if got := sevenSegmentDecode(); got != want {
-		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+		t.Errorf("sevenSegmentDecode() = %d, want = %d", got, want)
 	}
 }
 
 func TestSmokeBasin(t *testing.T) {
 	want := 570
 	if got := smokeBasin(); got != want {
-		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+		t.Errorf("smokeBasin() = %d, want = %d", got, want)
 	}
 }
 
 func TestSmokeBasinLargest(t *testing.T) {
 	want := 899392
 	if got := smokeBasinLargest(); got != want {
-		t.Errorf("whaleVsCrabs() = %d, want = %d", got, want)
+		t.Errorf("smokeBasinLargest() = %d, want = %d", got, want)
+	}
+}
+
+func TestSyntaxScoring(t *testing.T) {
+	want := 240123
+	if got := syntaxScoring(); got != want {
+		t.Errorf("syntaxScoring() = %d, want = %d", got, want)
+	}
+}
+
+func TestSyntaxScoringIncomplete(t *testing.T) {
+	want := 3260812321
+	if got := syntaxScoringIncomplete(); got != want {
+		t.Errorf("syntaxScoringIncomplete() = %d, want = %d", got, want)
 	}
 }

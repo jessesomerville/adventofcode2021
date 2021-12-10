@@ -105,3 +105,15 @@ func BenchmarkSmokeBasinLargest(b *testing.B) {
 		smokeBasinLargest()
 	}
 }
+
+func BenchmarkSyntaxScoring(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		syntaxScoring()
+	}
+}
+
+func BenchmarkSyntaxScoringIncomplete(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		syntaxScoringIncomplete()
+	}
+}
