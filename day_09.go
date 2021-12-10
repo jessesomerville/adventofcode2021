@@ -4,30 +4,30 @@ import (
 	_ "embed"
 	"sort"
 	"strconv"
-	"strings"
+	"sync"
 )
 
-//go:embed inputs/day_09.txt
-var heightMapFile string
+var (
+	//go:embed inputs/day_09.txt
+	heightMapFile string
 
-var mapWidth = 100
-var mapHeight = 100
+	mapWidth = 100
+	once     sync.Once
+	points   = make([]int, len(heightMapFile))
+)
 
-// var mapWidth = 10
-// var mapHeight = 5
+func getPoints() []int {
+	once.Do(func() {
+		for i, s := range heightMapFile {
+			points[i], _ = strconv.Atoi(string(s))
+		}
+	})
+	return points
+}
 
 // Change to binary search
 func smokeBasin() int {
-	lines := strings.Split(heightMapFile, "\n")
-	points := make([]int, mapWidth*mapHeight)
-	for ri, s := range lines {
-		for ci, x := range s {
-			coord := mapWidth*ri + ci
-			points[coord], _ = strconv.Atoi(string(x))
-		}
-	}
-
-	// printMap(points)
+	points = getPoints()
 	riskSum := 0
 	for i, currPoint := range points {
 		row := i / mapWidth
@@ -62,14 +62,7 @@ func smokeBasin() int {
 }
 
 func smokeBasinLargest() int {
-	lines := strings.Split(heightMapFile, "\n")
-	points := make([]int, mapWidth*mapHeight)
-	for ri, s := range lines {
-		for ci, x := range s {
-			coord := mapWidth*ri + ci
-			points[coord], _ = strconv.Atoi(string(x))
-		}
-	}
+	points = getPoints()
 
 	allBasins := []int{}
 	for i, currPoint := range points {
@@ -99,7 +92,7 @@ func smokeBasinLargest() int {
 				continue
 			}
 		}
-		allBasins = append(allBasins, len(floodSearch(i, points, map[int]bool{})))
+		allBasins = append(allBasins, floodSearch(i, map[int]bool{}))
 	}
 	sort.Slice(allBasins, func(i, j int) bool {
 		return allBasins[i] > allBasins[j]
@@ -107,9 +100,9 @@ func smokeBasinLargest() int {
 	return allBasins[0] * allBasins[1] * allBasins[2]
 }
 
-func floodSearch(idx int, points []int, searched map[int]bool) []int {
+func floodSearch(idx int, searched map[int]bool) int {
 	currPoint := points[idx]
-	basin := []int{currPoint}
+	basin := 1
 	searched[idx] = true
 	row := idx / mapWidth
 	col := idx % mapWidth
@@ -119,22 +112,22 @@ func floodSearch(idx int, points []int, searched map[int]bool) []int {
 	right := idx - 1
 	if up >= 0 && !searched[up] {
 		if points[up] > currPoint && points[up] != 9 {
-			basin = append(basin, floodSearch(up, points, searched)...)
+			basin += floodSearch(up, searched)
 		}
 	}
 	if down < len(points) && !searched[down] {
 		if points[down] > currPoint && points[down] != 9 {
-			basin = append(basin, floodSearch(down, points, searched)...)
+			basin += floodSearch(down, searched)
 		}
 	}
 	if left < len(points) && left/mapWidth == row && !searched[left] {
 		if points[left] > currPoint && points[left] != 9 {
-			basin = append(basin, floodSearch(left, points, searched)...)
+			basin += floodSearch(left, searched)
 		}
 	}
 	if right >= 0 && right/mapWidth == row && !searched[right] {
 		if points[right] > currPoint && points[right] != 9 {
-			basin = append(basin, floodSearch(right, points, searched)...)
+			basin += floodSearch(right, searched)
 		}
 	}
 	return basin

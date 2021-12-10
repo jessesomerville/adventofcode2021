@@ -16,7 +16,7 @@ func main() {
 	// whaleVsCrabsGas()
 	// sevenSegment()
 	// sevenSegmentDecode()
-	// smokeBasin()
+	smokeBasin()
 	// smokeBasinLargest()
 
 }
