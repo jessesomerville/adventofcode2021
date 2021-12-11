@@ -134,3 +134,17 @@ func TestSyntaxScoringIncomplete(t *testing.T) {
 		t.Errorf("syntaxScoringIncomplete() = %d, want = %d", got, want)
 	}
 }
+
+func TestDumboOcto(t *testing.T) {
+	want := 1571
+	if got := dumboOctopus(); got != want {
+		t.Errorf("dumboOctopus() = %d, want = %d", got, want)
+	}
+}
+
+func TestDumboOctoSync(t *testing.T) {
+	want := 387
+	if got := dumboOctopusSync(); got != want {
+		t.Errorf("dumboOctopusSync() = %d, want = %d", got, want)
+	}
+}

@@ -65,3 +65,17 @@ BenchmarkSevenSegmentDecode-8                       5180            235132 ns/op
 BenchmarkSmokeBasin-8                               8551            137188 ns/op               0 B/op          0 allocs/op
 BenchmarkSmokeBasinLargest-8                        1014           1160128 ns/op          277790 B/op       1381 allocs/op
 ```
+
+### Day 10
+
+```
+BenchmarkSyntaxScoring-8                            9054            139879 ns/op           15128 B/op         13 allocs/op
+BenchmarkSyntaxScoringIncomplete-8                  7232            167333 ns/op           16256 B/op        459 allocs/op
+```
+
+### Day 11
+
+```
+BenchmarkDumboOcto-8                                8467            139225 ns/op          109760 B/op       1921 allocs/op
+BenchmarkDumboOctoSync-8                            2178            526448 ns/op          418602 B/op       7133 allocs/op
+```

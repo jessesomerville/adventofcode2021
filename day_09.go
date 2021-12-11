@@ -4,7 +4,6 @@ import (
 	_ "embed"
 	"sort"
 	"strconv"
-	"sync"
 )
 
 var (
@@ -12,7 +11,6 @@ var (
 	heightMapFile string
 
 	mapWidth = 100
-	once     sync.Once
 	points   = make([]int, len(heightMapFile))
 )
 

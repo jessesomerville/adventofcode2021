@@ -17,17 +17,7 @@ var (
 		'}': '{',
 		'>': '<',
 	}
-
-	onceChunk sync.Once
-	chunks    []string
 )
-
-func getChunks() []string {
-	onceChunk.Do(func() {
-		chunks = strings.Split(chunksFile, "\n")
-	})
-	return chunks
-}
 
 func syntaxScoring() int {
 	scoreLookup := map[rune]int{
@@ -40,7 +30,7 @@ func syntaxScoring() int {
 
 	totalPoints := 0
 Loop:
-	for _, chunk := range getChunks() {
+	for _, chunk := range strings.Split(chunksFile, "\n") {
 		for _, c := range chunk {
 			switch c {
 			case '(', '[', '{', '<':
@@ -77,7 +67,7 @@ func syntaxScoringIncomplete() int {
 
 	allScores := []int{}
 Loop:
-	for _, chunk := range getChunks() {
+	for _, chunk := range strings.Split(chunksFile, "\n") {
 		totalPoints := 0
 		bracketStack := newStack()
 		for _, c := range chunk {

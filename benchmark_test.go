@@ -117,3 +117,15 @@ func BenchmarkSyntaxScoringIncomplete(b *testing.B) {
 		syntaxScoringIncomplete()
 	}
 }
+
+func BenchmarkDumboOcto(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		dumboOctopus()
+	}
+}
+
+func BenchmarkDumboOctoSync(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		dumboOctopusSync()
+	}
+}

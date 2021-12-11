@@ -1,5 +1,14 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+)
+
+var (
+	once sync.Once
+)
+
 func main() {
 	// sonarSweep()
 	// sonarSweepSlidingWindow()
@@ -20,4 +29,6 @@ func main() {
 	// smokeBasinLargest()
 	// syntaxScoring()
 	// syntaxScoringIncomplete()
+	// dumboOctopus()
+	fmt.Println(dumboOctopusSync())
 }
