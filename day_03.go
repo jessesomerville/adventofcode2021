@@ -2,10 +2,22 @@ package main
 
 import (
 	_ "embed"
+	"strings"
 )
 
 //go:embed inputs/day_03.txt
 var diagFile string
+
+func parseFile(f string) <-chan string {
+	c := make(chan string)
+	go func() {
+		for _, line := range strings.Split(f, "\n") {
+			c <- line
+		}
+		close(c)
+	}()
+	return c
+}
 
 func binaryDiagnostic() int {
 	gamma := 0
@@ -62,26 +74,26 @@ func binaryDiagnosticLifeSupport() int {
 	return oxygen * co2
 }
 
-type node struct {
-	zero, one *node
+type trieNode struct {
+	zero, one *trieNode
 	weight    int
 }
 
-func makeTrie() *node {
-	root := new(node)
+func makeTrie() *trieNode {
+	root := new(trieNode)
 	for n := range parseFile(diagFile) {
 		currParent := root
 		for _, c := range n {
 			switch c {
 			case '0':
 				if currParent.zero == nil {
-					currParent.zero = new(node)
+					currParent.zero = new(trieNode)
 				}
 				currParent.zero.weight++
 				currParent = currParent.zero
 			case '1':
 				if currParent.one == nil {
-					currParent.one = new(node)
+					currParent.one = new(trieNode)
 				}
 				currParent.one.weight++
 				currParent = currParent.one

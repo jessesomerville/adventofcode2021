@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -24,11 +23,18 @@ func main() {
 	// whaleVsCrabs()
 	// whaleVsCrabsGas()
 	// sevenSegment()
-	// sevenSegmentDecode()
+	// fmt.Println(sevenSegmentDecode())
 	// smokeBasin()
 	// smokeBasinLargest()
 	// syntaxScoring()
 	// syntaxScoringIncomplete()
 	// dumboOctopus()
-	fmt.Println(dumboOctopusSync())
+	// dumboOctopusSync()
+	// passagePathing()
+	// passagePathingRevisit()
+
+	// decodeExperiment()
+
+	// makeCodeTmpl(12)
+	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }

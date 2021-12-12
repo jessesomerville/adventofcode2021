@@ -79,3 +79,10 @@ BenchmarkSyntaxScoringIncomplete-8                  7232            167333 ns/op
 BenchmarkDumboOcto-8                                8467            139225 ns/op          109760 B/op       1921 allocs/op
 BenchmarkDumboOctoSync-8                            2178            526448 ns/op          418602 B/op       7133 allocs/op
 ```
+
+### Day 12
+
+```
+BenchmarkPassagePathing-8                            826           1391540 ns/op            6513 B/op         95 allocs/op
+BenchmarkPassagePathingRevisit-8                      21          53707319 ns/op            6499 B/op         95 allocs/op
+```

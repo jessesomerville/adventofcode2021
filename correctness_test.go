@@ -148,3 +148,17 @@ func TestDumboOctoSync(t *testing.T) {
 		t.Errorf("dumboOctopusSync() = %d, want = %d", got, want)
 	}
 }
+
+func TestPassagePathing(t *testing.T) {
+	want := 4691
+	if got := passagePathing(); got != want {
+		t.Errorf("passagePathing() = %d, want = %d", got, want)
+	}
+}
+
+func TestPassagePathingRevisit(t *testing.T) {
+	want := 140718
+	if got := passagePathingRevisit(); got != want {
+		t.Errorf("passagePathingRevisit() = %d, want = %d", got, want)
+	}
+}

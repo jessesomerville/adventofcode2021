@@ -94,6 +94,12 @@ func BenchmarkSevenSegmentDecode(b *testing.B) {
 	}
 }
 
+func BenchmarkDecodeExperiment(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		decodeExperiment()
+	}
+}
+
 func BenchmarkSmokeBasin(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		smokeBasin()
@@ -127,5 +133,17 @@ func BenchmarkDumboOcto(b *testing.B) {
 func BenchmarkDumboOctoSync(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		dumboOctopusSync()
+	}
+}
+
+func BenchmarkPassagePathing(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		passagePathing()
+	}
+}
+
+func BenchmarkPassagePathingRevisit(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		passagePathingRevisit()
 	}
 }

@@ -148,3 +148,83 @@ func parseInputSegments(in string) []*segment {
 	}
 	return ret
 }
+
+// This is slower because of countChars
+func decodeExperiment() int {
+	sumOfAll := 0
+	for _, row := range parseInputSegments(segmentsFile) {
+		b, c, e := countChars(row.signals)
+		wireMap := map[rune]rune{
+			'b': b,
+			'c': c,
+			'e': e,
+		}
+
+		sum := 0
+		for i, o := range row.output {
+			pos := int(math.Pow10(3 - i))
+			switch len(o) {
+			case 2:
+				sum += pos
+			case 3:
+				sum += 7 * pos
+			case 4:
+				sum += 4 * pos
+			case 7:
+				sum += 8 * pos
+			case 5:
+				switch {
+				case strings.ContainsRune(o, wireMap['e']):
+					sum += 2 * pos
+				case strings.ContainsRune(o, wireMap['b']):
+					sum += 5 * pos
+				default:
+					sum += 3 * pos
+				}
+			case 6:
+				if strings.ContainsRune(o, wireMap['e']) {
+					if !strings.ContainsRune(o, wireMap['c']) {
+						sum += 6 * pos
+					}
+				} else {
+					sum += 9 * pos
+				}
+			}
+		}
+		sumOfAll += sum
+	}
+
+	return sumOfAll
+}
+
+func countChars(str []string) (b, c, e rune) {
+	chars := map[rune]int{'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0}
+	longChars := map[rune]int{'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0}
+
+	for _, s := range str {
+		l := len(s)
+		for _, c := range s {
+			chars[c]++
+			if l == 5 || l == 6 {
+				longChars[c]++
+			}
+		}
+	}
+
+	for k, v := range chars {
+		switch v {
+		case 4:
+			e = k
+		case 6:
+			b = k
+			delete(longChars, k)
+		}
+	}
+	for k, v := range longChars {
+		if v == 4 {
+			c = k
+			return b, c, e
+		}
+	}
+	return b, c, e
+}
