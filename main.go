@@ -32,9 +32,10 @@ func main() {
 	// dumboOctopusSync()
 	// passagePathing()
 	// passagePathingRevisit()
+	origami()
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(12)
+	// makeCodeTmpl(13)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }
