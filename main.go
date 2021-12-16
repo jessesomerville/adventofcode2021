@@ -35,7 +35,8 @@ func main() {
 	// origami()
 	// polymerization()
 	// polymerization40()
-	chiton()
+	// chiton()
+	chitonFullCave()
 
 	// decodeExperiment()
 

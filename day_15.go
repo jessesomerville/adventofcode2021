@@ -9,6 +9,7 @@ import (
 
 	"github.com/beefsack/go-astar"
 	"github.com/fatih/color"
+	// "github.com/solarlune/paths"
 )
 
 var (
@@ -29,91 +30,116 @@ var (
 2311944581`
 )
 
-// 594 too high
 func chiton() int {
 	grid := parseChitonTiles(chitonFile)
+	src := grid[0]
+	target := grid[len(grid)-1]
+	_, distance, found := astar.Path(target, src)
+	if !found {
+		fmt.Println("Failed to find path")
+	}
+	return int(distance)
+}
+
+func parseChitonTiles(f string) []*Tile {
+	fullCaveWidth := chitonWidth
+	fullCave := make([]*Tile, 0, fullCaveWidth*fullCaveWidth)
+
+	lines := strings.Split(f, "\n")
+	for row, line := range lines {
+		for col, n := range line {
+			nInt, _ := strconv.Atoi(string(n))
+			t := &Tile{
+				X:         col,
+				Y:         row,
+				Cost:      float64(nInt),
+				FullWidth: fullCaveWidth,
+			}
+			fullCave = append(fullCave, t)
+		}
+	}
+	for _, t := range fullCave {
+		t.Grid = fullCave
+	}
+	return fullCave
+}
+
+// 2886 is too high, 2877 is too low
+func chitonFullCave() int {
+	grid := parseChitonTilesFull(chitonFile)
 
 	src := grid[0]
 	target := grid[len(grid)-1]
 
-	path, distance, found := astar.Path(src, target)
+	_, distance, found := astar.Path(src, target)
 	if !found {
 		fmt.Println("Failed to find path")
 	}
-	fmt.Printf("Path is %d tiles long\n", int(distance))
-
-	for _, p := range path {
-		tile := p.(*Tile)
-		tile.Path = true
-	}
-	printChiton(grid)
+	fmt.Printf("Path risk is %d\n", int(distance))
 	return 0
 }
 
-// func parseChitons(f string) []int {
-// 	lines := strings.Split(f, "\n")
-// 	grid := make([]int, len(lines)*len(lines[0]))
+func parseChitonTilesFull(f string) []*Tile {
+	fullCaveWidth := chitonWidth * 5
+	fullCave := make([]*Tile, fullCaveWidth*fullCaveWidth)
 
-// 	for row, line := range lines {
-// 		for col, r := range line {
-// 			n, _ := strconv.Atoi(string(r))
-// 			coord := len(lines[0])*row + col
-// 			grid[coord] = n
-// 		}
-// 	}
-// 	return grid
-// }
-
-func parseChitonTiles(f string) []*Tile {
 	lines := strings.Split(f, "\n")
-	grid := make([]*Tile, len(lines)*len(lines[0]))
-
 	for row, line := range lines {
-		for col, r := range line {
-			n, _ := strconv.Atoi(string(r))
+		for col, n := range line {
+			nInt, _ := strconv.Atoi(string(n))
+			coord := fullCaveWidth*row + col
 			t := &Tile{
-				X:    col,
-				Y:    row,
-				Cost: float64(n),
+				X:         col,
+				Y:         row,
+				Cost:      float64(nInt),
+				FullWidth: fullCaveWidth,
 			}
-			coord := len(lines[0])*row + col
-			grid[coord] = t
+			fullCave[coord] = t
+
+			for rowi := 0; rowi < 5; rowi++ {
+				for coli := 0; coli < 5; coli++ {
+					coord := fullCaveWidth*(row+(chitonWidth*rowi)) + (col + (chitonWidth * coli))
+					nextVal := ((nInt + rowi + coli) % 9)
+					if nextVal == 0 {
+						nextVal = 9
+					}
+					t := &Tile{
+						X:         col + (chitonWidth * coli),
+						Y:         row + (chitonWidth * rowi),
+						Cost:      float64(nextVal),
+						FullWidth: fullCaveWidth,
+					}
+					fullCave[coord] = t
+				}
+			}
 		}
 	}
 
-	for _, t := range grid {
-		t.Grid = grid
+	for _, t := range fullCave {
+		t.Grid = fullCave
 	}
-	return grid
+	return fullCave
 }
 
-func printChiton(grid []*Tile) {
+func printChiton(grid []*Tile, width int) {
 	for i, t := range grid {
 		if t.Path {
 			fmt.Print(color.BlueString("%d", int(t.Cost)))
 		} else {
 			fmt.Print(color.HiWhiteString("%d", int(t.Cost)))
 		}
-		if (i+1)%chitonWidth == 0 {
+		if (i+1)%width == 0 {
 			fmt.Println()
 		}
 	}
 }
 
-// func printChiton(grid []int) {
-// 	for i, c := range grid {
-// 		fmt.Print(c)
-// 		if (i+1)%chitonWidth == 0 {
-// 			fmt.Println()
-// 		}
-// 	}
-// }
-
 type Tile struct {
-	X, Y int
-	Cost float64
-	Grid []*Tile
-	Path bool
+	X, Y      int
+	Cost      float64
+	Grid      []*Tile
+	Path      bool
+	FullWidth int
 }
 
 func (t *Tile) PathNeighbors() []astar.Pather {
@@ -134,7 +160,7 @@ func (t *Tile) PathNeighbors() []astar.Pather {
 }
 
 func (t *Tile) Up() *Tile {
-	coord := chitonWidth*(t.Y-1) + t.X
+	coord := t.FullWidth*(t.Y-1) + t.X
 	if coord < 0 || coord >= len(t.Grid) {
 		return nil
 	}
@@ -142,10 +168,15 @@ func (t *Tile) Up() *Tile {
 }
 
 func (t *Tile) Right() *Tile {
-	if (t.X + 1) >= chitonWidth {
+	if (t.X + 1) >= t.FullWidth {
 		return nil
 	}
-	coord := chitonWidth*t.Y + t.X + 1
+
+	coord := t.FullWidth*t.Y + t.X + 1
+	if (coord / t.FullWidth) != ((coord - 1) / t.FullWidth) {
+		return nil
+	}
+
 	if coord < 0 || coord >= len(t.Grid) {
 		return nil
 	}
@@ -156,7 +187,10 @@ func (t *Tile) Left() *Tile {
 	if t.X == 0 {
 		return nil
 	}
-	coord := chitonWidth*t.Y + t.X + 1
+	coord := t.FullWidth*t.Y + t.X - 1
+	if (coord / t.FullWidth) != ((coord + 1) / t.FullWidth) {
+		return nil
+	}
 	if coord < 0 || coord >= len(t.Grid) {
 		return nil
 	}
@@ -164,7 +198,7 @@ func (t *Tile) Left() *Tile {
 }
 
 func (t *Tile) Down() *Tile {
-	coord := chitonWidth*(t.Y+1) + t.X
+	coord := t.FullWidth*(t.Y+1) + t.X
 	if coord < 0 || coord >= len(t.Grid) {
 		return nil
 	}
