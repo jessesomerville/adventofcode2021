@@ -34,10 +34,11 @@ func main() {
 	// passagePathingRevisit()
 	// origami()
 	// polymerization()
-	polymerization40()
+	// polymerization40()
+	chiton()
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(14)
+	// makeCodeTmpl(15)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }
