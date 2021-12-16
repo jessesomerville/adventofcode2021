@@ -33,6 +33,8 @@ func main() {
 	// passagePathing()
 	// passagePathingRevisit()
 	// origami()
+	// polymerization()
+	// polymerization40()
 	chiton()
 
 	// decodeExperiment()

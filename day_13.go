@@ -54,7 +54,6 @@ func reflectY(grid []int, axis, rowLen int) []int {
 			break
 		}
 		if bottomGrid[btmCoord] == 1 {
-			// fmt.Println(col, btmRow)
 			topGrid[topCoord] = 1
 		}
 	}
