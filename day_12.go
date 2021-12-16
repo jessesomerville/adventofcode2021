@@ -13,19 +13,19 @@ var (
 
 func passagePathing() int {
 	graph := parseGraph(passageFile)
-	graph.AllWalksToEnd()
+	graph.allWalksToEnd()
 	return walkCount
 }
 
 func passagePathingRevisit() int {
 	graph := parseGraph(passageFile)
-	graph.AllWalksToEndRevisit()
+	graph.allWalksToEndRevisit()
 	return walkCount2
 }
 
-type Node struct {
+type node struct {
 	Value    string
-	Children []*Node
+	Children []*node
 	IsLarge  bool
 }
 
@@ -34,7 +34,7 @@ var (
 	walkCount int
 )
 
-func (n *Node) AllWalksToEnd() {
+func (n *node) allWalksToEnd() {
 	if visited[n.Value] {
 		return
 	}
@@ -47,7 +47,7 @@ func (n *Node) AllWalksToEnd() {
 		return
 	}
 	for _, adj := range n.Children {
-		adj.AllWalksToEnd()
+		adj.allWalksToEnd()
 	}
 	visited[n.Value] = false
 }
@@ -58,7 +58,7 @@ var (
 	visitedTwice bool
 )
 
-func (n *Node) AllWalksToEndRevisit() {
+func (n *node) allWalksToEndRevisit() {
 	if visited2[n.Value] > 0 && visitedTwice {
 		return
 	}
@@ -74,7 +74,7 @@ func (n *Node) AllWalksToEndRevisit() {
 		return
 	}
 	for _, adj := range n.Children {
-		adj.AllWalksToEndRevisit()
+		adj.allWalksToEndRevisit()
 	}
 	visited2[n.Value]--
 	if visited2[n.Value] == 1 {
@@ -82,16 +82,16 @@ func (n *Node) AllWalksToEndRevisit() {
 	}
 }
 
-func parseGraph(f string) *Node {
-	graph := map[string]*Node{}
-	graph["start"] = &Node{Value: "start"}
-	graph["end"] = &Node{Value: "end"}
+func parseGraph(f string) *node {
+	graph := map[string]*node{}
+	graph["start"] = &node{Value: "start"}
+	graph["end"] = &node{Value: "end"}
 	for _, edge := range getEdges(f) {
 		if _, ok := graph[edge[0]]; !ok {
-			graph[edge[0]] = &Node{Value: edge[0], IsLarge: isUpper(edge[0])}
+			graph[edge[0]] = &node{Value: edge[0], IsLarge: isUpper(edge[0])}
 		}
 		if _, ok := graph[edge[1]]; !ok {
-			graph[edge[1]] = &Node{Value: edge[1], IsLarge: isUpper(edge[1])}
+			graph[edge[1]] = &node{Value: edge[1], IsLarge: isUpper(edge[1])}
 		}
 		graph[edge[0]].Children = append(graph[edge[0]].Children, graph[edge[1]])
 	}

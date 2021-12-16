@@ -2,7 +2,10 @@ module github.com/jessesomerville/adventofcode2021
 
 go 1.17
 
-require github.com/fatih/color v1.13.0
+require (
+	github.com/fatih/color v1.13.0
+	github.com/vinzmay/go-rope v0.0.0-20140903160433-d4b1498b37c3
+)
 
 require (
 	github.com/mattn/go-colorable v0.1.9 // indirect
