@@ -1,13 +1,5 @@
 package main
 
-import (
-	"sync"
-)
-
-var (
-	once sync.Once
-)
-
 func main() {
 	// sonarSweep()
 	// sonarSweepSlidingWindow()
@@ -36,10 +28,12 @@ func main() {
 	// polymerization()
 	// polymerization40()
 	// chiton()
-	chitonFullCave()
+	// chitonFullCave()
+	// packetDecoderVersionCount(packetsFile)
+	// packetDecoder(packetsFile)
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(15)
+	// makeCodeTmpl(16)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }

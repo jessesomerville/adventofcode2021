@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"sort"
 	"strconv"
+	"sync"
 )
 
 var (
@@ -12,6 +13,8 @@ var (
 
 	mapWidth = 100
 	points   = make([]int, len(heightMapFile))
+
+	once sync.Once
 )
 
 func getPoints() []int {

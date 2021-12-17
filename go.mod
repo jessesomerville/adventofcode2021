@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/beefsack/go-astar v0.0.0-20200827232313-4ecf9e304482
 	github.com/fatih/color v1.13.0
-	github.com/solarlune/paths v0.0.0-20210502000212-9a0a8bceed77
+	github.com/google/go-cmp v0.5.6
 	github.com/vinzmay/go-rope v0.0.0-20140903160433-d4b1498b37c3
 )
 
