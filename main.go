@@ -31,9 +31,11 @@ func main() {
 	// chitonFullCave()
 	// packetDecoderVersionCount(packetsFile)
 	// packetDecoder(packetsFile)
+	// trickShot()
+	trickShotEveryAngle()
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(16)
+	// makeCodeTmpl(17)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }

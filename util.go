@@ -90,6 +90,12 @@ func (b *board) String() string {
 
 // Populate the day's file with templated code.
 func makeCodeTmpl(d int) {
+	inF, err := os.Create(fmt.Sprintf("inputs/day_%d.txt", d))
+	if err != nil {
+		log.Fatal(err)
+	}
+	inF.Close()
+
 	x := struct{ Day int }{d}
 	tmpl, err := template.New("tmp").Parse(codeTmpl)
 	if err != nil {
