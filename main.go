@@ -15,7 +15,7 @@ func main() {
 	// whaleVsCrabs()
 	// whaleVsCrabsGas()
 	// sevenSegment()
-	// fmt.Println(sevenSegmentDecode())
+	// sevenSegmentDecode()
 	// smokeBasin()
 	// smokeBasinLargest()
 	// syntaxScoring()
@@ -32,10 +32,12 @@ func main() {
 	// packetDecoderVersionCount(packetsFile)
 	// packetDecoder(packetsFile)
 	// trickShot()
-	trickShotEveryAngle()
+	// trickShotEveryAngle()
+	// snailfish()
+	snailfishLargest()
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(17)
+	// makeCodeTmpl(18)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }
