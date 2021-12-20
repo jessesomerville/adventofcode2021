@@ -34,10 +34,11 @@ func main() {
 	// trickShot()
 	// trickShotEveryAngle()
 	// snailfish()
-	snailfishLargest()
+	// snailfishLargest()
+	beaconScanner()
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(18)
+	// makeCodeTmpl(19)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }

@@ -156,3 +156,13 @@ func writeTmpl(x *funcsSpecs, tmpl *template.Template, fname string) {
 	}
 	w.Flush()
 }
+
+// JoinFloat64 concatenates the elements of its first argument to create a string delimeted by sep.
+func JoinFloat64(elems []float64, sep string) string {
+	converted := make([]string, 0, len(elems))
+	for _, e := range elems {
+		elemStr := fmt.Sprintf("%.1f", e)
+		converted = append(converted, elemStr)
+	}
+	return strings.Join(converted, sep)
+}
