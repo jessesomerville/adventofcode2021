@@ -1,22 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
-	"text/tabwriter"
 )
+
+type scannerCoord struct {
+	X, Y, Z int
+}
 
 type scanner struct {
 	ID      int
 	Beacons []*beacon
 	Graph   *beaconGraph
 	Coords  *scannerCoord
-}
-
-type scannerCoord struct {
-	X, Y, Z int
 }
 
 func (s *scanner) GraphBeacons() {
@@ -30,21 +28,6 @@ func (s *scanner) GraphBeacons() {
 		}
 	}
 	s.Graph = bg
-}
-
-func (s *scanner) String() string {
-	buf := new(strings.Builder)
-	fmt.Fprintf(buf, "---[ Scanner %d ]---\n", s.ID)
-	w := tabwriter.NewWriter(buf, 0, 0, 2, ' ', 0)
-	for i, b1 := range s.Graph.Adj {
-		fmt.Fprintf(w, "%d:\t", i)
-		for _, dist := range b1 {
-			fmt.Fprintf(w, "%.1f\t", dist)
-		}
-		fmt.Fprintln(w)
-	}
-	w.Flush()
-	return buf.String()
 }
 
 type beacon struct {
@@ -94,9 +77,6 @@ func parseBeacons(f string) []*scanner {
 			ID:      i,
 			Beacons: make([]*beacon, 0, len(beaconCoords)),
 		}
-		// if i == 0 {
-		// 	b.Coords = &scannerCoord{0, 0, 0}
-		// }
 		b.Coords = &scannerCoord{0, 0, 0}
 		for _, coordsStr := range beaconCoords {
 			coords := strings.Split(coordsStr, ",")

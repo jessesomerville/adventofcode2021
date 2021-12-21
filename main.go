@@ -35,7 +35,8 @@ func main() {
 	// trickShotEveryAngle()
 	// snailfish()
 	// snailfishLargest()
-	beaconScanner()
+	// beaconScanner()
+	beaconScannerMaxDist()
 
 	// b0 := &beacon{
 	// 	-618, -824, -621,

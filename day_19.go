@@ -3,53 +3,51 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"log"
 	"math"
 )
 
 var (
 	//go:embed inputs/day_19.txt
 	beaconsFile string
-
-	//go:embed test_inputs/day_19.txt
-	beaconsFileTest string
 )
 
 func beaconScanner() int {
-	scanners := parseBeacons(beaconsFileTest)
+	scanners := parseBeacons(beaconsFile)
 
-	// findCoords(scanners, 0, map[int]bool{0: true})
-
-	s0 := scanners[0]
-	s1 := scanners[1]
-	s4 := scanners[4]
-
-	s0s1 := sharedBeacons(s0, s1)
-	setCoords(s0, s1, s0s1)
-	s1s4 := sharedBeacons(s1, s4)
-	// for _, b := range s1s4 {
-	// 	b0 := s1.Beacons[b[0]]
-	// 	b1 := s4.Beacons[b[1]]
-	// 	fmt.Println(b0, b1)
-	// }
-	setCoords(s1, s4, s1s4)
-
+	findCoords(scanners, 0, map[int]bool{0: true})
+	beaconMap := map[string]bool{}
 	for _, s := range scanners {
-		fmt.Println(s.Coords)
-	}
-
-	return 0
-}
-
-func intersection(a, b []int) (int, int, int) {
-	for i, ai := range a {
-		for j, bi := range b {
-			if ai == bi {
-				return i, j, ai
+		for _, b := range s.Beacons {
+			bCoordStr := fmt.Sprint(b)
+			if !beaconMap[bCoordStr] {
+				beaconMap[bCoordStr] = true
 			}
 		}
 	}
-	return 0, 0, 0
+
+	return len(beaconMap)
+}
+
+func beaconScannerMaxDist() int {
+	scanners := parseBeacons(beaconsFile)
+
+	findCoords(scanners, 0, map[int]bool{0: true})
+
+	maxDist := 0
+	for i, s0 := range scanners {
+		for j, s1 := range scanners {
+			if i == j {
+				continue
+			}
+			if dist := s0.ManhattanDist(s1); dist > maxDist {
+				maxDist = dist
+			}
+		}
+	}
+
+	fmt.Println(maxDist)
+
+	return 0
 }
 
 func findCoords(scanners []*scanner, idx int, found map[int]bool) {
@@ -60,64 +58,17 @@ func findCoords(scanners []*scanner, idx int, found map[int]bool) {
 			continue
 		}
 		s1 := scanners[i]
-		if matches := sharedBeacons(s0, s1); matches != nil {
-			// coordsRelativeToRoot(s0, s1, matches)
-			fmt.Println(idx, i)
-			setCoords(s0, s1, matches)
+		if s0i, s1j, intersect := sharedBeacons(s0, s1); intersect != nil {
+			s0.align(s1, s0i, s1j, intersect)
 			found[i] = true
 			findCoords(scanners, i, found)
 		}
 	}
 }
 
-func setCoords(s0, s1 *scanner, beaconIdxs [][]int) {
-	b00 := s0.Beacons[beaconIdxs[0][0]]
-	b01 := s1.Beacons[beaconIdxs[0][1]]
-	b10 := s0.Beacons[beaconIdxs[1][0]]
-	b11 := s1.Beacons[beaconIdxs[1][1]]
-
-	xs0 := []int{(b00.X + b01.X), (b00.X - b01.X), (b00.X + b01.Y), (b00.X - b01.Y), (b00.X + b01.Z), (b00.X - b01.Z)}
-	ys0 := []int{(b00.Y + b01.Y), (b00.Y - b01.Y), (b00.Y + b01.Y), (b00.Y - b01.Y), (b00.Y + b01.Z), (b00.Y - b01.Z)}
-	zs0 := []int{(b00.Z + b01.Z), (b00.Z - b01.Z), (b00.Z + b01.Y), (b00.Z - b01.Y), (b00.Z + b01.Z), (b00.Z - b01.Z)}
-
-	xs1 := []int{(b10.X + b11.X), (b10.X - b11.X), (b10.X + b11.Y), (b10.X - b11.Y), (b10.X + b11.Z), (b10.X - b11.Z)}
-	ys1 := []int{(b10.Y + b11.Y), (b10.Y - b11.Y), (b10.Y + b11.Y), (b10.Y - b11.Y), (b10.Y + b11.Z), (b10.Y - b11.Z)}
-	zs1 := []int{(b10.Z + b11.Z), (b10.Z - b11.Z), (b10.Z + b11.Y), (b10.Z - b11.Y), (b10.Z + b11.Z), (b10.Z - b11.Z)}
-
-	// xs1 := []int{(b10.X + b11.X), (b10.X - b11.X)}
-	// ys1 := []int{(b10.Y + b11.Y), (b10.Y - b11.Y)}
-	// zs1 := []int{(b10.Z + b11.Z), (b10.Z - b11.Z)}
-
-	xi, xj, x := intersection(xs0, xs1)
-	yi, yj, y := intersection(ys0, ys1)
-	zi, zj, z := intersection(zs0, zs1)
-
-	fmt.Println(xi, xj, x)
-	fmt.Println(yi, yj, y)
-	fmt.Println(zi, zj, z)
-	// fmt.Println(xs0, xs1)
-	// fmt.Println(ys0, ys1)
-	// fmt.Println(zs0, zs1)
-	fmt.Println()
-
-	s1.Coords = &scannerCoord{
-		X: s0.Coords.X + x,
-		Y: s0.Coords.X + y,
-		Z: s0.Coords.X + z,
-	}
-
-	// for _, m := range beaconIdxs {
-	// 	s0b := s0.Beacons[m[0]]
-	// 	s1.Beacons[m[1]] = s0b
-	// }
-}
-
-// If s0 and s1 have 12 overlapping beacons, return those beacons.  The return value is a slice
-// whose subslices are []int{b0_ID, b1_ID} where s0_ID and s1_ID are the matching beacons.
-// If they don't overlap, nil is returned.
-func sharedBeacons(s0, s1 *scanner) [][]int {
-	for _, s0BeaconDists := range s0.Graph.Adj {
-		for _, s1BeaconDists := range s1.Graph.Adj {
+func sharedBeacons(s0, s1 *scanner) (i, j int, intersect [][]int) {
+	for i, s0BeaconDists := range s0.Graph.Adj {
+		for j, s1BeaconDists := range s1.Graph.Adj {
 			matching := make([][]int, 0, len(s0BeaconDists))
 			for i, s0Dist := range s0BeaconDists {
 				for j, s1Dist := range s1BeaconDists {
@@ -127,147 +78,17 @@ func sharedBeacons(s0, s1 *scanner) [][]int {
 				}
 			}
 
-			if len(matching) >= 12 {
-				return matching
+			if len(matching) >= 11 {
+				return i, j, matching
 			}
 		}
 	}
-	return nil
+	return 0, 0, nil
 }
 
-func (s *scanner) Distance(b *beacon) float64 {
-	x1, y1, z1 := float64(s.Coords.X), float64(s.Coords.Y), float64(s.Coords.Z)
-	x2, y2, z2 := float64(b.X), float64(b.Y), float64(b.Z)
-
-	x0 := math.Pow((x2 - x1), 2)
-	y0 := math.Pow((y2 - y1), 2)
-	z0 := math.Pow((z2 - z1), 2)
-
-	return math.Sqrt(x0 + y0 + z0)
-}
-
-func (s *scanner) DistanceS(b *scanner) float64 {
-	x1, y1, z1 := float64(s.Coords.X), float64(s.Coords.Y), float64(s.Coords.Z)
-	x2, y2, z2 := float64(b.Coords.X), float64(b.Coords.Y), float64(b.Coords.Z)
-
-	x0 := math.Pow((x2 - x1), 2)
-	y0 := math.Pow((y2 - y1), 2)
-	z0 := math.Pow((z2 - z1), 2)
-
-	return math.Sqrt(x0 + y0 + z0)
-}
-
-func coordsRelativeToRoot(s0, s1 *scanner, overlapping [][]int) {
-	if s1.Coords != nil {
-		return
-		// log.Fatalf("Scanner ID=%d already has coordinates (%d, %d, %d)", s1.ID, s1.Coords.X, s1.Coords.Y, s1.Coords.Z)
-	}
-	if s0.Coords == nil {
-		log.Fatalf("Scanner ID=%d does not have coordinates so Scanner ID=%d cannot be located", s0.ID, s1.ID)
-	}
-
-	var s0X, s0Y, s0Z, s1X, s1Y, s1Z []int
-	for _, b := range overlapping {
-		s0B := s0.Beacons[b[0]]
-		s1B := s1.Beacons[b[1]]
-		s0X = append(s0X, s0B.X)
-		s0Y = append(s0Y, s0B.Y)
-		s0Z = append(s0Z, s0B.Z)
-		s1X = append(s1X, s1B.X)
-		s1Y = append(s1Y, s1B.Y)
-		s1Z = append(s1Z, s1B.Z)
-	}
-
-	var x, y, z int
-	var xset, yset, zset bool
-	s1Coords := [][]int{s1X, s1Y, s1Z}
-
-	for _, coord := range s1Coords {
-		if !xset {
-			if newX, ok := findAllSameAdd(s0X, coord); ok {
-				// fmt.Println("x plus", newX, i)
-				x = newX
-				// x = s0.Coords.X + newX
-				xset = true
-			} else if newX, ok := findAllSameSub(s0X, coord); ok {
-				// fmt.Println("x minus", newX, i)
-				x = newX
-				// x = s0.Coords.X - newX
-				xset = true
-			}
-		}
-		if !yset {
-			if newY, ok := findAllSameAdd(s0Y, coord); ok {
-				// fmt.Println("y plus", newY, i)
-				y = newY
-				// y = s0.Coords.Y + newY
-				yset = true
-			} else if newY, ok := findAllSameSub(s0Y, coord); ok {
-				// fmt.Println("y minus", newY, i)
-				y = newY
-				// y = s0.Coords.Y - newY
-				yset = true
-			}
-		}
-		if !zset {
-			if newZ, ok := findAllSameAdd(s0Z, coord); ok {
-				// fmt.Println("z plus", newZ, i)
-				z = newZ
-				// z = s0.Coords.Z + newZ
-				zset = true
-			} else if newZ, ok := findAllSameSub(s0Z, coord); ok {
-				// fmt.Println("z minus", newZ, i)
-				z = newZ
-				// z = s0.Coords.Z - newZ
-				zset = true
-			}
-		}
-		if xset && yset && zset {
-			break
-		}
-	}
-
-	// xtmp := x + s0.Coords.X
-	// ytmp := y + s0.Coords.Y
-	// ztmp := z + s0.Coords.Z
-	// c1 := s1.Beacons[overlapping[0][1]]
-	// c2 := s0.Beacons[overlapping[0][0]]
-	// c1.Y += x
-	// c1.Z -= y
-	// c1.X -= z
-
-	// fmt.Println(c2)
-	// fmt.Println(c1)
-
-	fmt.Println()
-
-	// fmt.Println(s0.ID, s1.ID)
-	// fmt.Println(x, y, z)
-	s1.Coords = &scannerCoord{
-		X: s0.Coords.X - x,
-		Y: s0.Coords.Y + y,
-		Z: s0.Coords.Z - z,
-	}
-}
-
-func findAllSameAdd(a, b []int) (int, bool) {
-	baseline := a[0] + b[0]
-
-	for i := 1; i < len(a); i++ {
-		if a[i]+b[i] != baseline {
-			return 0, false
-		}
-	}
-	return baseline, true
-}
-
-func findAllSameSub(a, b []int) (int, bool) {
-	baseline := a[0] - b[0]
-
-	for i := 1; i < len(a); i++ {
-		if a[i]-b[i] != baseline {
-			return 0, false
-		}
-	}
-	return baseline, true
+func (s0 *scanner) ManhattanDist(s1 *scanner) int {
+	dx := math.Abs(float64(s0.Coords.X - s1.Coords.X))
+	dy := math.Abs(float64(s0.Coords.Y - s1.Coords.Y))
+	dz := math.Abs(float64(s0.Coords.Z - s1.Coords.Z))
+	return int(dx + dy + dz)
 }
