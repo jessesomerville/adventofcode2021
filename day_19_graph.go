@@ -94,9 +94,10 @@ func parseBeacons(f string) []*scanner {
 			ID:      i,
 			Beacons: make([]*beacon, 0, len(beaconCoords)),
 		}
-		if i == 0 {
-			b.Coords = &scannerCoord{0, 0, 0}
-		}
+		// if i == 0 {
+		// 	b.Coords = &scannerCoord{0, 0, 0}
+		// }
+		b.Coords = &scannerCoord{0, 0, 0}
 		for _, coordsStr := range beaconCoords {
 			coords := strings.Split(coordsStr, ",")
 			xCoord, _ := strconv.Atoi(coords[0])
