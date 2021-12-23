@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"text/tabwriter"
 	"text/template"
@@ -165,4 +166,46 @@ func JoinFloat64(elems []float64, sep string) string {
 		converted = append(converted, elemStr)
 	}
 	return strings.Join(converted, sep)
+}
+
+// SortUniq returns a sorted unique set of the input ints.
+func SortUniq(nums ...int) []int {
+	numMap := make(map[int]bool)
+	for _, n := range nums {
+		numMap[n] = true
+	}
+	uniqNums := make([]int, 0, len(numMap))
+	for n := range numMap {
+		uniqNums = append(uniqNums, n)
+	}
+	sort.Ints(uniqNums)
+	return uniqNums
+}
+
+func max(nums ...int) int {
+	var maxNum int
+	for i, n := range nums {
+		if i == 0 {
+			maxNum = n
+			continue
+		}
+		if n > maxNum {
+			maxNum = n
+		}
+	}
+	return maxNum
+}
+
+func min(nums ...int) int {
+	var minNum int
+	for i, n := range nums {
+		if i == 0 {
+			minNum = n
+			continue
+		}
+		if n < minNum {
+			minNum = n
+		}
+	}
+	return minNum
 }

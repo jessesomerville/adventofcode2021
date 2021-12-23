@@ -36,26 +36,15 @@ func main() {
 	// snailfish()
 	// snailfishLargest()
 	// beaconScanner()
-	beaconScannerMaxDist()
-
-	// b0 := &beacon{
-	// 	-618, -824, -621,
-	// }
-	// b1 := &beacon{
-	// 	686, 422, 578,
-	// }
-	// fmt.Println(-618 + 686)
-	// fmt.Println(-618 - 686)
-	// fmt.Println(-824 + 422)
-	// fmt.Println(-824 - 422)
-	// fmt.Println(-621 + 578)
-	// fmt.Println(-621 - 578)
-	// fmt.Println(686 - -618)
-
-	// rotationMatrix(b0, b1)
+	// beaconScannerMaxDist()
+	// diracDice()
+	// trenchMap()
+	// reactorReboot()
+	// reactorRebootFull()
+	amphipod()
 
 	// decodeExperiment()
 
-	// makeCodeTmpl(19)
+	// makeCodeTmpl(23)
 	// addTestsAndBenchmarks("passagePathing", "passagePathingRevisit", 4691, 140718)
 }
