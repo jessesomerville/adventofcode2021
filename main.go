@@ -40,8 +40,8 @@ func main() {
 	// diracDice()
 	// trenchMap()
 	// reactorReboot()
-	// reactorRebootFull()
-	amphipod()
+	reactorRebootFull()
+	// amphipod()
 
 	// decodeExperiment()
 

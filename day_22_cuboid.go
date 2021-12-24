@@ -52,75 +52,109 @@ func (c Cuboid) Volume() int {
 	return int(xDist * yDist * zDist)
 }
 
+type Bounds struct {
+	Min, Max int
+}
+
 func (c Cuboid) SplitX(cr *Cuboid) []*Cuboid {
-	if (c.X1 == cr.X1) && (c.X2 == cr.X2) {
+	if (cr.X1 == c.X1 && cr.X2 == c.X2) || (c.X1 >= cr.X1 && c.X2 <= cr.X2) {
 		return []*Cuboid{&c}
 	}
-	xInt0, xInt1 := max(c.X1, cr.X1), min(c.X2, cr.X2)
-	xBounds := SortUniq(xInt0, xInt1, c.X1, c.X2)
+	if (c.X1 == cr.X1 && c.X2 < cr.X2) || (c.X1 > cr.X1 && c.X2 == cr.X2) {
+		return []*Cuboid{&c}
+	}
+
+	xBounds := getBounds(c.X1, c.X2, cr.X1, cr.X2)
 	spl := make([]*Cuboid, 0, 3)
-	for xi := 0; xi < len(xBounds)-1; xi++ {
+	for _, b := range xBounds {
 		subCuboid := &Cuboid{
-			xBounds[xi] + 1, xBounds[xi+1],
+			b.Min, b.Max,
 			c.Y1, c.Y2,
 			c.Z1, c.Z2,
 		}
-		if xi == 0 {
-			subCuboid.X1--
-		}
 		spl = append(spl, subCuboid)
 	}
+
 	return spl
 }
 
 func (c Cuboid) SplitY(cr *Cuboid) []*Cuboid {
-	if (c.Y1 == cr.Y1) && (c.Y2 == cr.Y2) {
+	if (cr.Y1 == c.Y1 && cr.Y2 == c.Y2) || (c.Y1 >= cr.Y1 && c.Y2 <= cr.Y2) {
 		return []*Cuboid{&c}
 	}
-	y0, y1 := max(c.Y1, cr.Y1), min(c.Y2, cr.Y2)
-	yBounds := SortUniq(y0, y1, c.Y1, c.Y2)
+	if (c.Y1 == cr.Y1 && c.Y2 < cr.Y2) || (c.Y1 > cr.Y1 && c.Y2 == cr.Y2) {
+		return []*Cuboid{&c}
+	}
+
+	yBounds := getBounds(c.Y1, c.Y2, cr.Y1, cr.Y2)
 	spl := make([]*Cuboid, 0, 3)
-	for i := 0; i < len(yBounds)-1; i++ {
+	for _, b := range yBounds {
 		subCuboid := &Cuboid{
 			c.X1, c.X2,
-			yBounds[i] + 1, yBounds[i+1],
+			b.Min, b.Max,
 			c.Z1, c.Z2,
-		}
-		if i == 0 {
-			subCuboid.Y1--
 		}
 		spl = append(spl, subCuboid)
 	}
+
 	return spl
 }
 
 func (c Cuboid) SplitZ(cr *Cuboid) []*Cuboid {
-	if (c.Z1 == cr.Z1) && (c.Z2 == cr.Z2) {
+	if (cr.Z1 == c.Z1 && cr.Z2 == c.Z2) || (c.Z1 >= cr.Z1 && c.Z2 <= cr.Z2) {
 		return []*Cuboid{&c}
 	}
-	z0, z1 := max(c.Z1, cr.Z1), min(c.Z2, cr.Z2)
-	zBounds := SortUniq(z0, z1, c.Z1, c.Z2)
+	if (c.Z1 == cr.Z1 && c.Z2 < cr.Z2) || (c.Z1 > cr.Z1 && c.Z2 == cr.Z2) {
+		return []*Cuboid{&c}
+	}
+
+	zBounds := getBounds(c.Z1, c.Z2, cr.Z1, cr.Z2)
 	spl := make([]*Cuboid, 0, 3)
-	for i := 0; i < len(zBounds)-1; i++ {
+	for _, b := range zBounds {
 		subCuboid := &Cuboid{
 			c.X1, c.X2,
 			c.Y1, c.Y2,
-			zBounds[i] + 1, zBounds[i+1],
-		}
-		if i == 0 {
-			subCuboid.Z1--
+			b.Min, b.Max,
 		}
 		spl = append(spl, subCuboid)
 	}
+
 	return spl
 }
 
 // Intersect performs collision detection between two cuboids.
 func (c0 *Cuboid) Intersect(c1 *Cuboid) bool {
-	x := max(min(c0.X2, c1.X2)-max(c0.X1, c1.X1), 0)
-	y := max(min(c0.Y2, c1.Y2)-max(c0.Y1, c1.Y1), 0)
-	z := max(min(c0.Z2, c1.Z2)-max(c0.Z1, c1.Z1), 0)
-	return (x * y * z) > 0
+	xInt := anyIn(c0.X1, c0.X2, c1.X1, c1.X2)
+	yInt := anyIn(c0.Y1, c0.Y2, c1.Y1, c1.Y2)
+	zInt := anyIn(c0.Z1, c0.Z2, c1.Z1, c1.Z2)
+
+	return xInt && yInt && zInt
+
+	// x := max(min(c0.X2, c1.X2)-max(c0.X1, c1.X1), 0)
+	// y := max(min(c0.Y2, c1.Y2)-max(c0.Y1, c1.Y1), 0)
+	// z := max(min(c0.Z2, c1.Z2)-max(c0.Z1, c1.Z1), 0)
+	// return (x * y * z) > 0
+
+	// xInt := !(c0.X2 < c1.X1) && !(c1.X2 < c0.X1)
+	// yInt := !(c0.Y2 < c1.Y1) && !(c1.Y2 < c0.Y1)
+	// zInt := !(c0.Z2 < c1.Z1) && !(c1.Z2 < c0.Z1)
+	// return xInt || yInt || zInt
+}
+
+func anyIn(a0, a1, b0, b1 int) bool {
+	aDist := math.Abs(float64(a1 - a0))
+	bDist := math.Abs(float64(b1 - b0))
+
+	if bDist < aDist {
+		a0, a1, b0, b1 = b0, b1, a0, a1
+	}
+
+	for i := a0; i <= a1; i++ {
+		if i == b0 || i == b1 {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *Cuboid) String() string {
@@ -129,4 +163,28 @@ func (c *Cuboid) String() string {
 	fmt.Fprintf(buf, "Y: %d..%d\n", c.Y1, c.Y2)
 	fmt.Fprintf(buf, "Z: %d..%d\n", c.Z1, c.Z2)
 	return buf.String()
+}
+
+func getBounds(a0, a1, b0, b1 int) []*Bounds {
+	if a0 < b0 && a1 > b1 {
+		// a complete encompasses b
+		return []*Bounds{
+			{a0, b0 - 1},
+			{b0, b1},
+			{b1 + 1, a1},
+		}
+	}
+	if a0 < b0 {
+		// a0 | b0 | a1 | b1
+		return []*Bounds{
+			{a0, b0 - 1},
+			{b0, a1},
+		}
+	} else {
+		// b0 | a0 | b1 | a1
+		return []*Bounds{
+			{a0, b1},
+			{b1 + 1, a1},
+		}
+	}
 }
