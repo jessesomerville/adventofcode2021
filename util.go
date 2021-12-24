@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"sort"
 	"strings"
@@ -208,4 +209,8 @@ func min(nums ...int) int {
 		}
 	}
 	return minNum
+}
+
+func distBetween(a, b int) int {
+	return int(math.Abs(float64(a - b)))
 }
