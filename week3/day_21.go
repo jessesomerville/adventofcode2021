@@ -1,54 +1,17 @@
 package week3
 
-type player struct {
-	ID       int
-	Position int
-	Score    int
-}
-
-var (
-	diracPlayers = []*player{
-		{
-			ID:       1,
-			Position: 1,
-		},
-		{
-			ID:       2,
-			Position: 2,
-		},
-	}
-	diracPlayersTest = []*player{
-		{
-			ID:       1,
-			Position: 4,
-		},
-		{
-			ID:       2,
-			Position: 8,
-		},
-	}
+import (
+	"fmt"
+	"math"
 )
 
-// D100 represents the deterministic 100 sided die.
-type D100 struct {
-	TimesRolled int
-	NextRoll    int
-}
+var (
+	diracPlayers     = NewPlayers(1, 2)
+	diracPlayersTest = NewPlayers(4, 8)
+)
 
-// Roll rolls the D100 three times and returns the sum.
-func (d *D100) Roll3() int {
-	return d.Roll() + d.Roll() + d.Roll()
-}
-
-// Roll rolls the D100 once.
-func (d *D100) Roll() int {
-	rollVal := (d.NextRoll % 100) + 1
-	d.NextRoll++
-	d.TimesRolled++
-	return rollVal
-}
-
-func DiracDice() int {
+// Dirac is the solution for the practice round of Dirac.
+func Dirac() int {
 	players := diracPlayers
 	die := &D100{
 		TimesRolled: 0,
@@ -72,4 +35,37 @@ func DiracDice() int {
 		loserScore = players[0].Score
 	}
 	return loserScore * die.TimesRolled
+}
+
+// DiracQuantum is the solution to Dirac with the quantum die.
+func DiracQuantum() int {
+	wp1 := &WinPaths{
+		Wins: make(map[int]int),
+	}
+	wp1.Calculate(1, 0, 4)
+
+	wp2 := &WinPaths{
+		Wins: make(map[int]int),
+	}
+	wp2.Calculate(1, 0, 8)
+
+	p2NoWin := make(map[int]int, len(wp2.Wins))
+
+	for i := 3; i <= 10; i++ {
+		didntWin := 0
+		for j := i; j <= 10; j++ {
+			didntWin += wp2.Wins[j]
+		}
+		p2NoWin[i] = didntWin
+	}
+
+	fmt.Println(math.Pow(3, 6))
+
+	// p1Wins := 0
+	// for turn, winCount := range wp1.Wins {
+	// 	p1Wins += winCount * p2NoWin[turn]
+	// }
+	// fmt.Println(p1Wins)
+
+	return 0
 }

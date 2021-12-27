@@ -1,7 +1,9 @@
 package main
 
-import "github.com/jessesomerville/adventofcode2021/week3"
+import (
+	"github.com/jessesomerville/adventofcode2021/week3"
+)
 
 func main() {
-	week3.TrenchMap(trenchImageFile)
+	week3.DiracQuantum()
 }
