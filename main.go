@@ -1,7 +1,9 @@
 package main
 
-import "github.com/jessesomerville/adventofcode2021/week3"
+import (
+	"github.com/jessesomerville/adventofcode2021/week4"
+)
 
 func main() {
-	week3.DiracQuantum()
+	week4.SortBurrow(amphipodFile)
 }
