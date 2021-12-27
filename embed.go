@@ -59,6 +59,9 @@ var (
 	//go:embed inputs/day_20.txt
 	trenchImageFile string
 
+	//go:embed test_inputs/day_20.txt
+	trenchImageFileTest string
+
 	//go:embed inputs/day_22.txt
 	reactorFile string
 

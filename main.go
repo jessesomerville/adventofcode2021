@@ -1,9 +1,7 @@
 package main
 
-import (
-	"github.com/jessesomerville/adventofcode2021/week2"
-)
+import "github.com/jessesomerville/adventofcode2021/week3"
 
 func main() {
-	week2.Polymerization(polymerFile)
+	week3.TrenchMap(trenchImageFile)
 }
