@@ -1,8 +1,7 @@
 package week3
 
 import (
-	"fmt"
-	"math"
+	"github.com/jessesomerville/adventofcode2021/common"
 )
 
 var (
@@ -39,33 +38,29 @@ func Dirac() int {
 
 // DiracQuantum is the solution to Dirac with the quantum die.
 func DiracQuantum() int {
-	wp1 := &WinPaths{
-		Wins: make(map[int]int),
+	positionsToWinConditions()
+	p1Games := &PlayerOutcomes{
+		WinsByTurn: make(map[int]int),
 	}
-	wp1.Calculate(1, 0, 4)
-
-	wp2 := &WinPaths{
-		Wins: make(map[int]int),
+	p1Games.Simulate(1, 1, 0, 1)
+	p2Games := &PlayerOutcomes{
+		WinsByTurn: make(map[int]int),
 	}
-	wp2.Calculate(1, 0, 8)
+	p2Games.Simulate(1, 2, 0, 1)
 
-	p2NoWin := make(map[int]int, len(wp2.Wins))
+	p1Divergences := 1
+	p2Divergences := 1
+	p1Wins := 0
+	p2Wins := 0
+	for i := 1; i <= 10; i++ {
+		p1Wins += p1Games.WinsByTurn[i] * p1Divergences
+		p1Divergences *= 27
+		p1Divergences -= p2Games.WinsByTurn[i]
 
-	for i := 3; i <= 10; i++ {
-		didntWin := 0
-		for j := i; j <= 10; j++ {
-			didntWin += wp2.Wins[j]
-		}
-		p2NoWin[i] = didntWin
+		p2Divergences *= 27
+		p2Divergences -= p1Games.WinsByTurn[i]
+		p2Wins += p2Games.WinsByTurn[i] * p2Divergences
 	}
 
-	fmt.Println(math.Pow(3, 6))
-
-	// p1Wins := 0
-	// for turn, winCount := range wp1.Wins {
-	// 	p1Wins += winCount * p2NoWin[turn]
-	// }
-	// fmt.Println(p1Wins)
-
-	return 0
+	return common.Max(p1Wins, p2Wins)
 }
