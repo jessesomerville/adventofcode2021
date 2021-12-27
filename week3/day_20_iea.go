@@ -14,13 +14,12 @@ type ImageEnhancer struct {
 
 // Enhance applies the enhancement algorithm to the input image.
 func (ie *ImageEnhancer) Enhance() {
-	ie.Scale()
+	// ie.Scale()
 	enhanced := make([]int, 0, len(ie.Image))
 	for i := range ie.Image {
 		enhanced = append(enhanced, ie.NextPixel(i))
 	}
 	ie.Image = enhanced
-	ie.Trim()
 }
 
 // NextPixel takes and index of a pixel in the input image and returns the 9-bit binary number
@@ -56,16 +55,16 @@ func (ie *ImageEnhancer) PixelCount() int {
 }
 
 // Scale adds padding to the input image to provide space for enhancement.
-func (ie *ImageEnhancer) Scale() {
-	newWidth := ie.Width + 4
+func (ie *ImageEnhancer) Scale(amount int) {
+	newWidth := ie.Width + (amount * 2)
 	scaled := make([]int, 0, newWidth*newWidth)
 
 	for rowNum := 0; rowNum < newWidth; rowNum++ {
 		for colNum := 0; colNum < newWidth; colNum++ {
-			if rowNum < 2 || rowNum > newWidth-3 || colNum < 2 || colNum > newWidth-3 {
+			if rowNum < amount || rowNum > newWidth-(amount+1) || colNum < amount || colNum > newWidth-(amount+1) {
 				scaled = append(scaled, 0)
 			} else {
-				coord := ie.Width*(rowNum-2) + (colNum - 2)
+				coord := ie.Width*(rowNum-amount) + (colNum - amount)
 				scaled = append(scaled, ie.Image[coord])
 			}
 		}
@@ -75,12 +74,12 @@ func (ie *ImageEnhancer) Scale() {
 }
 
 // Trim removes the superfluous padding left after enhancement.
-func (ie *ImageEnhancer) Trim() {
-	newWidth := ie.Width - 2
+func (ie *ImageEnhancer) Trim(amount int) {
+	newWidth := ie.Width - amount*2
 	trimmed := make([]int, 0, newWidth*newWidth)
 	for rowNum := 0; rowNum < newWidth; rowNum++ {
 		for colNum := 0; colNum < newWidth; colNum++ {
-			coord := ie.Width*(rowNum+1) + (colNum + 1)
+			coord := ie.Width*(rowNum+amount) + (colNum + amount)
 			trimmed = append(trimmed, ie.Image[coord])
 		}
 	}

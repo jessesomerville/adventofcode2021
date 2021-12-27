@@ -2,13 +2,15 @@ package week3
 
 import "fmt"
 
-// TrenchMap 4924 too high
-// Answer is 4917
+// TrenchMap is the solution for day 20.
 func TrenchMap(f string) int {
 	trench := NewImageEnhancer(f)
-	trench.Enhance()
-	trench.Enhance()
-	fmt.Println(trench)
+	trench.Scale(100)
+	for i := 0; i < 50; i++ {
+		trench.Enhance()
+	}
+	trench.Trim(50)
+	fmt.Println(trench.PixelCount())
 
 	return 0
 }
