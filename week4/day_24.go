@@ -1,45 +1,21 @@
 package week4
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func MONAD(f string) {
-	op := ops[len(ops)-2]
-	for in := 21*26 - 1; in >= 337; in-- {
-		for w := 1; w <= 9; w++ {
-			res := op.Op(w, in)
-			if res >= 12 && res <= 20 {
-				fmt.Println(w, in)
-			}
-		}
-	}
 
-	// z := 9541593
-	// for _, op := range ops {
-	// 	fmt.Println(z)
-	// 	z = op.Op(9, z)
+	// targets := map[int]bool{0: true}
+	// maxTarget := 1
+	// for opIdx := len(ops) - 1; opIdx >= 0; opIdx-- {
+	// 	targets, maxTarget = findBounds(ops[opIdx], targets, maxTarget)
 	// }
-	// fmt.Println(z)
 
-	// Loop:
-	// 	for i := 999999999; i >= 988888888; i-- {
-	// 		if i%10 == 0 {
-	// 			continue
-	// 		}
-	// 		input := i
-	// 		var z int
-	// 		var val int
-	// 		for j := 0; j < 9; j++ {
-	// 			val, input = splitMSD(input)
-	// 			if val == 0 {
-	// 				continue Loop
-	// 			}
-	// 			z = ops[j].Op(val, z)
-	// 		}
-	// 		if z == 9541593 {
-	// 			fmt.Println(i)
-	// 			return
-	// 		}
-	// 	}
+	wz := WZ{123, 456}
+	nwz := wz.Update(9, 678)
+	fmt.Println(nwz.W, nwz.Z)
 
 	// input := 111111111
 	// var z, val int
@@ -51,47 +27,55 @@ func MONAD(f string) {
 
 }
 
-type InstBlock interface {
-	Op(int, int) int
+type MONADRev struct {
+	Ops         []InstBlock
+	ValidMONADs []*WZ
 }
 
-type AddInst struct {
-	A1, A2 int
+func (mr *MONADRev) Reverse(opIdx, targetOut int) []*WZ {
+	// op := mr.Ops[opIdx]
+	// for z := 0; z <= (targetOut+1)*26; z++ {
+	// 	for w, res := range op.AllWs(z) {
+	// 		if res == targetOut {
+
+	// 		}
+	// 	}
+	// }
+	return nil
 }
 
-func (pi *AddInst) Op(w, z int) int {
-	if (z%26)+pi.A1 != w {
-		z = (z * 26) + w + pi.A2
+type WZ struct {
+	W, Z int
+}
+
+func (wz WZ) Update(w, z int) *WZ {
+	nextPow := int(math.Log10(float64(wz.W))) + 1
+	newW := (wz.W) + (w * int(math.Pow10(nextPow)))
+	return &WZ{
+		W: newW,
+		Z: z,
 	}
-	return z
 }
 
-type SubInst struct {
-	A1, A2 int
-}
-
-func (mi *SubInst) Op(w, z int) int {
-	x := z
-	z /= 26
-	if (x%26)-mi.A1 != w {
-		z = (z * 26) + w + mi.A2
+func findBounds(op InstBlock, targets map[int]bool, maxTarget int) (map[int]bool, int) {
+	switch inst := op.(type) {
+	case *AddInst:
+		op = inst
+	case *SubInst:
+		op = inst
 	}
-	return z
-}
 
-var ops = []InstBlock{
-	// &AddInst{13, 8},
-	// &AddInst{12, 16},
-	// &AddInst{10, 4},
-	// &SubInst{11, 1},
-	// &AddInst{14, 13},
-	// &AddInst{13, 5},
-	// &AddInst{12, 0},
-	// &SubInst{5, 10},
-	// &AddInst{10, 7},
-	&SubInst{0, 2},
-	&SubInst{11, 13},
-	&SubInst{13, 15},
-	&SubInst{13, 14},
-	&SubInst{11, 9},
+	allowedInputs := make(map[int]bool)
+	maxInput := -1
+	for z := 0; z <= (maxTarget+1)*26; z++ {
+		for _, res := range op.AllWs(z) {
+			if targets[res] {
+				allowedInputs[z] = true
+				if z > maxInput {
+					maxInput = z
+				}
+			}
+		}
+	}
+	return allowedInputs, maxInput
 }
