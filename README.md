@@ -1,6 +1,11 @@
 # Advent of Code 2021
 
+Solutions to all 25 days (except day 23 which I solved by hand) of
+[Advent of Code](https://adventofcode.com) 2021 written in Go.
+
 ## Benchmarks
+
+> **NOTE:** I stopped doing benchmarks after day 12 because it became more trouble than it was worth.
 
 Benchmarks were performed in Windows Subsystem for Linux (WSL) on an i7-9700K CPU @ 3.60GHz.
 

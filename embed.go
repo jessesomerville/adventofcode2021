@@ -72,5 +72,5 @@ var (
 	aluFile string
 
 	//go:embed inputs/day_25.txt
-	seaCuFile string
+	seaCucumberFile string
 )

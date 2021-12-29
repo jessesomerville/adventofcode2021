@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	week4.MONAD(aluFile)
+	week4.SeaCucumbers(seaCucumberFile)
 }
