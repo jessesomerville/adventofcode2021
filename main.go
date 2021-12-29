@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	week4.SortBurrow(amphipodFile)
+	week4.MONAD(aluFile)
 }
