@@ -29,6 +29,28 @@ var DistanceMatrix = [][]int{
 	{10, 9, 8, 7, 6, 5, 4, 3, 2, 3, 4, 9, 10, 7, 8, 5, 6, 1, 0},
 }
 
+// BurrowEdges are the edges between spaces in the burrow.
+var BurrowEdges = [][]int{
+	{0, 1},
+	{1, 2},
+	{2, 3},
+	{3, 4},
+	{4, 5},
+	{5, 6},
+	{6, 7},
+	{7, 8},
+	{8, 9},
+	{9, 10},
+	{2, 11},
+	{11, 12},
+	{4, 13},
+	{13, 14},
+	{6, 15},
+	{15, 16},
+	{8, 17},
+	{17, 18},
+}
+
 // Types of amphipods.
 const (
 	Amber = iota
@@ -37,28 +59,10 @@ const (
 	Desert
 )
 
-// The amount of energy it takes each amphipod type to move one space.
-const (
-	AmberEnergy  = 1
-	BronzeEnergy = 10
-	CopperEnergy = 100
-	DesertEnergy = 1000
-)
-
-// Types of spaces within the burrow.
-const (
-	AmberRoom = iota
-	BronzeRoom
-	CopperRoom
-	DesertRoom
-	Room
-	Hallway
-	OutsideOfRoom
-)
-
-// Possible states for an amphipod.
-const (
-	Unmoved = iota
-	InHallway
-	AtHome
-)
+// EnergyByType is the amount of energy each amphipod uses.
+var EnergyByType = map[int]int{
+	Amber:  1,
+	Bronze: 10,
+	Copper: 100,
+	Desert: 1000,
+}

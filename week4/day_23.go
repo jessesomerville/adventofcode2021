@@ -1,10 +1,5 @@
 package week4
 
-import (
-	"fmt"
-	"strings"
-)
-
 var (
 	amphipodFileTest = `#############
 #...........#
@@ -22,18 +17,18 @@ var (
 
 // SortBurrow rearranges the amphipods into their proper rooms.
 func SortBurrow(f string) int {
-	burrow := NewBurrow(burrowTest)
-	buf := new(strings.Builder)
-	for _, row := range burrow.DistMatrix {
-		fmt.Fprint(buf, "{")
-		for i, d := range row {
-			if i != len(row)-1 {
-				fmt.Fprintf(buf, "%d, ", d)
-			} else {
-				fmt.Fprintf(buf, "%d},\n", d)
-			}
-		}
-	}
-	fmt.Println(buf.String())
+	// burrow := NewBurrow()
+	// amber1, amber2 := placeAmphipods(burrow, Amber, burrowTest[Amber])
+	// bronze1, bronze2 := placeAmphipods(burrow, Bronze, burrowTest[Bronze])
+	// copper1, copper2 := placeAmphipods(burrow, Copper, burrowTest[Copper])
+	// desert1, desert2 := placeAmphipods(burrow, Desert, burrowTest[Desert])
 	return 0
 }
+
+func placeAmphipods(b *Burrow, t int, locs []int) (a1, a2 *Amphipod) {
+	a1 = b.NewAmphipod(t, locs[0])
+	a2 = b.NewAmphipod(t, locs[1])
+	return a1, a2
+}
+
+// 62568 too high

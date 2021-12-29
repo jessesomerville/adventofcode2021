@@ -1,73 +1,116 @@
 package week4
 
-// Amphipod represents one of the amphipods in the burrow.
+// Types of spaces within the burrow.
+const (
+	AmberRoom = iota
+	BronzeRoom
+	CopperRoom
+	DesertRoom
+	Hallway
+	OutsideOfRoom
+)
+
+// Amphipod represents one of the 8 amphipods.
 type Amphipod struct {
 	Type     int
-	Location *Space
-	State    int
+	Energy   int
+	Position *Space
 }
 
-// Space represents a single space in the burrow.
+// Space represents a single burrow space.
 type Space struct {
-	Type       int
-	Accessible map[int]bool
+	ID        int
+	Type      int
+	Neighbors []*Neighbor
 }
 
-// Burrow represents the burrow as a whole.
+// Neighbor represents the bordering spaces.
+type Neighbor struct {
+	*Space
+	Blocked bool
+}
+
+// UnblockSpace adds a connection from s to n.
+func (s *Space) UnblockSpace(n *Space) {
+	for _, neighbor := range s.Neighbors {
+		if neighbor.Space == n {
+			neighbor.Blocked = false
+			return
+		}
+	}
+}
+
+// BlockSpace removes a connection from s to n.
+func (s *Space) BlockSpace(n *Space) {
+	for _, neighbor := range s.Neighbors {
+		if neighbor.Space == n {
+			neighbor.Blocked = true
+			return
+		}
+	}
+}
+
+// Burrow represents the graph of the burrow spaces.
 type Burrow struct {
-	Amphipods  map[int][]*Amphipod
-	Spaces     []*Space
-	DistMatrix [][]int
+	Spaces []*Space
 }
 
-// NewBurrow returns a burrow with the specified initial state.
-func NewBurrow(initState map[int][]int) *Burrow {
-	b := &Burrow{
-		Amphipods:  make(map[int][]*Amphipod, 4),
-		Spaces:     make([]*Space, 0, 19),
-		DistMatrix: DistanceMatrix,
-	}
-	for i := 0; i < 19; i++ {
-		newRoom := &Space{Accessible: initialAccess(i)}
-		switch i {
+// NewBurrow creates a new empty burrow.
+func NewBurrow() *Burrow {
+	spaces := make([]*Space, 0, 19)
+	for spaceLoc := 0; spaceLoc < 19; spaceLoc++ {
+		newSpace := &Space{
+			ID:        spaceLoc,
+			Neighbors: make([]*Neighbor, 0, 3),
+		}
+		switch spaceLoc {
 		case 0, 1, 3, 5, 7, 9, 10:
-			newRoom.Type = Hallway
+			newSpace.Type = Hallway
 		case 2, 4, 6, 8:
-			newRoom.Type = OutsideOfRoom
+			newSpace.Type = OutsideOfRoom
 		case 11, 12:
-			newRoom.Type = AmberRoom
+			newSpace.Type = AmberRoom
 		case 13, 14:
-			newRoom.Type = BronzeRoom
+			newSpace.Type = BronzeRoom
 		case 15, 16:
-			newRoom.Type = CopperRoom
+			newSpace.Type = CopperRoom
 		case 17, 18:
-			newRoom.Type = DesertRoom
+			newSpace.Type = DesertRoom
 		}
-		b.Spaces = append(b.Spaces, newRoom)
+		spaces = append(spaces, newSpace)
 	}
-	for aType, pos := range initState {
-		thisType := make([]*Amphipod, 0, 2)
-		for _, position := range pos {
-			amph := &Amphipod{
-				Type:     aType,
-				Location: b.Spaces[position],
-				State:    Unmoved,
-			}
-			thisType = append(thisType, amph)
-		}
-		b.Amphipods[aType] = thisType
+	b := &Burrow{spaces}
+	for _, edge := range BurrowEdges {
+		s1 := b.Spaces[edge[0]]
+		s2 := b.Spaces[edge[1]]
+		s1.Neighbors = append(s1.Neighbors, &Neighbor{s2, false})
+		s2.Neighbors = append(s2.Neighbors, &Neighbor{s1, false})
 	}
 	return b
 }
 
-func initialAccess(idx int) map[int]bool {
-	acc := make(map[int]bool, 19)
-	if idx == 12 || idx == 14 || idx == 16 || idx == 18 {
-		return acc
+// NewAmphipod returns a new amphipod.
+func (b *Burrow) NewAmphipod(t, location int) *Amphipod {
+	occupied := b.Spaces[location]
+	for _, n := range occupied.Neighbors {
+		n.BlockSpace(occupied)
 	}
-	for i := 0; i < 11; i++ {
-		acc[i] = true
+
+	return &Amphipod{
+		Type:     t,
+		Energy:   EnergyByType[t],
+		Position: occupied,
 	}
-	acc[idx] = false
-	return acc
+}
+
+// MoveAmphipod places the amphipod in a new space.
+func (b *Burrow) MoveAmphipod(a *Amphipod, s *Space) {
+	currSpace := a.Position
+	for _, n := range currSpace.Neighbors {
+		n.UnblockSpace(currSpace)
+	}
+	for _, n := range s.Neighbors {
+		n.BlockSpace(s)
+	}
+	a.Position = s
 }
