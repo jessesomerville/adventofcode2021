@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/beefsack/go-astar"
-	"github.com/fatih/color"
 )
 
 var (
@@ -119,9 +118,9 @@ func parseChitonTilesFull(f string) []*Tile {
 func printChiton(grid []*Tile, width int) {
 	for i, t := range grid {
 		if t.Path {
-			fmt.Print(color.BlueString("%d", int(t.Cost)))
+			fmt.Printf("\x1b[34m%d\x1b[0m\t", int(t.Cost))
 		} else {
-			fmt.Print(color.HiWhiteString("%d", int(t.Cost)))
+			fmt.Printf("\x1b[97m%d\x1b[0m\t", int(t.Cost))
 		}
 		if (i+1)%width == 0 {
 			fmt.Println()

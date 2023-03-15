@@ -6,8 +6,6 @@ import (
 	"strings"
 	"sync"
 	"text/tabwriter"
-
-	"github.com/fatih/color"
 )
 
 type cell struct {
@@ -119,6 +117,7 @@ func GiantSquid(f string) int {
 		for _, b := range boards {
 			if c, ok := b.values[draw]; ok {
 				if b.won(c) {
+					fmt.Println(b)
 					return b.score(draw)
 				}
 			}
@@ -169,9 +168,9 @@ func (b *board) String() string {
 		for _, cellVal := range row {
 			thisCell := b.values[cellVal]
 			if thisCell.marked {
-				fmt.Fprintf(w, "%s\t", color.BlueString(cellVal))
+				fmt.Fprintf(w, "\x1b[34m%s\x1b[0m\t", cellVal)
 			} else {
-				fmt.Fprintf(w, "%s\t", color.HiWhiteString(cellVal))
+				fmt.Fprintf(w, "\x1b[97m%s\x1b[0m\t", cellVal)
 			}
 		}
 		fmt.Fprintln(w)
